@@ -7,24 +7,37 @@ namespace SmartMirror
 {
     static class Weather
     {
+		// 12 hour forecast
 		public static List<int> hourlyTempList = new List<int>();
 		public static List<int> hourlyPrecipChance = new List<int>();
+
+		// Day's forecast (high/low)
+		public static int highTemp = 0;
+		public static int lowTemp = 0;
+
+		// Current temp and conditions
+		public static int currTemp = 0;
+		public static string forecastMessage = "";
+
 		public static string errorMessage = "";
 
-        // Gets the forecast for the next 12 hours
-        static public void GetHourlyForecast(int currentHrFloor)
+        // Updates the forecast for the next 12 hours
+        static public void UpdateHourlyForecast(int currentHrFloor)
         {
 			errorMessage = "";
             WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
 
-            // Try to get the forecast from the wunderground
+            // Try to get the forecast from wunderground
             try
             {
                 WebResponse response = request.GetResponseAsync().Result;
                 Stream dataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
                 string responseStr = reader.ReadToEnd();
+				hourlyTempList.Clear();
+				hourlyPrecipChance.Clear();
 
+				hourlyTempList.Add(currTemp);
                 // For the next 11 hours Ceilinged so 12:36am will only read hour 1am
                 for (int hr = currentHrFloor; hr < currentHrFloor + 12; hr++)
                 {
@@ -40,8 +53,71 @@ namespace SmartMirror
             }
             catch (Exception e)
             {
-				errorMessage = e.ToString();
+				errorMessage = "Can't get hourly forecast";
             }
         }
-    }
+
+		// Updates the current temperature and conditions string
+		public static void UpdateWeather()
+		{
+			errorMessage = "";
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/75002.json");
+
+			// Try to get the weather from the wundergrund
+			try
+			{
+				WebResponse response = request.GetResponseAsync().Result;
+				Stream dataStream = response.GetResponseStream();
+				StreamReader reader = new StreamReader(dataStream);
+				string responseStr = reader.ReadToEnd();
+
+				if (responseStr != "")
+				{
+					// Acquire and parse the temperature
+					string tempStr = responseStr.Substring(responseStr.IndexOf("temp_f") + 8);
+					tempStr = tempStr.Substring(0, tempStr.IndexOf(','));
+					double temp = Double.Parse(tempStr);
+					currTemp = (int)Math.Round(temp);
+
+					// Acquire and parse the forecast message
+					forecastMessage = responseStr.Substring(responseStr.IndexOf("\"weather\"") + 11);
+					forecastMessage = forecastMessage.Substring(0, forecastMessage.IndexOf('\"'));
+				}
+			}
+			catch (Exception e)
+			{
+				errorMessage = "Can't get weather data";
+			}
+		}
+
+		// Updates the days (24hr) forecast (high/low)
+		public static void UpdateDaysForecast()
+		{
+			errorMessage = "";
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/75002.json");
+
+			// Try to get the forecast from the wunderground
+			try
+			{
+				WebResponse response = request.GetResponseAsync().Result;
+				Stream dataStream = response.GetResponseStream();
+				StreamReader reader = new StreamReader(dataStream);
+				string responseStr = reader.ReadToEnd();
+
+				if (responseStr != "")
+				{
+					// Acquire and parse the high and low forecast
+					string highLowStr = responseStr.Substring(responseStr.IndexOf("\"day\""));
+					string highTempStr = highLowStr.Substring(highLowStr.IndexOf("high") + 25);
+					highTemp = (int)Math.Round(Double.Parse(highTempStr.Substring(0, highTempStr.IndexOf('"'))));
+					string lowTempStr = highLowStr.Substring(highLowStr.IndexOf("low") + 24);
+					lowTemp = (int)Math.Round(Double.Parse(lowTempStr.Substring(0, lowTempStr.IndexOf('"'))));
+				}
+			}
+			catch (Exception e)
+			{
+				errorMessage = "Can't get day forecast";
+			}
+		}
+	}
 }
