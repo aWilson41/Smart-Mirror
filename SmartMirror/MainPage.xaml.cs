@@ -11,15 +11,15 @@ using Windows.Foundation;
 
 namespace SmartMirror
 {
-    public sealed partial class MainPage : Page
-    {
-        DateTime currDateTime = new DateTime();
-        DateTime prevDateTime = new DateTime();
+	public sealed partial class MainPage : Page
+	{
+		DateTime currDateTime = new DateTime();
+		DateTime prevDateTime = new DateTime();
 
-        public MainPage()
-        {
-            InitializeComponent();
-            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
+		public MainPage()
+		{
+			InitializeComponent();
+			DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
 
 			ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
 			//ApplicationView.GetForCurrentView().ExitFullScreenMode();
@@ -28,11 +28,11 @@ namespace SmartMirror
 			UpdateDate();
 
 			// Set the hour and minute hand
-            SetHourHand();
-            SetMinuteHand();
+			SetHourHand();
+			SetMinuteHand();
 			// Set the weather and the weather forecast
 			UpdateWeather();
-            UpdateWeatherLine(currDateTime.Hour);
+			UpdateWeatherLine(currDateTime.Hour);
 
 			// Setup the timer to update the date continously
 			DispatcherTimer timer = new DispatcherTimer();
@@ -41,17 +41,17 @@ namespace SmartMirror
 			timer.Start();
 		}
 
-        // Updates the clock
-        private void Update(object sender, object e)
-        {
+		// Updates the clock
+		private void Update(object sender, object e)
+		{
 			UpdateDate();
 
-            // If the minute changed
-            if (currDateTime.Minute != prevDateTime.Minute)
-            {
+			// If the minute changed
+			if (currDateTime.Minute != prevDateTime.Minute)
+			{
 				// Update the hour/minute hand
 				SetMinuteHand();
-                SetHourHand();
+				SetHourHand();
 
 				// Every 15 minutes update the weather
 				if (currDateTime.Minute % 15 == 0)
@@ -61,7 +61,7 @@ namespace SmartMirror
 				if (currDateTime.Hour != prevDateTime.Hour)
 					UpdateWeatherLine(currDateTime.Hour);
 			}
-        }
+		}
 
 		private void UpdateDate()
 		{
@@ -288,5 +288,6 @@ namespace SmartMirror
 			return new Point(0.5f * ((2.0f * p1.X) + (-p0.X + p2.X) * t + (2.0f * p0.X - 5.0f * p1.X + 4.0f * p2.X - p3.X) * t2 + (-p0.X + 3.0f * p1.X - 3.0f * p2.X + p3.X) * t3),
 				0.5f * ((2.0f * p1.Y) + (-p0.Y + p2.Y) * t + (2.0f * p0.Y - 5.0f * p1.Y + 4.0f * p2.Y - p3.Y) * t2 + (-p0.Y + 3.0f * p1.Y - 3.0f * p2.Y + p3.Y) * t3));
 		}
+
 	}
 }

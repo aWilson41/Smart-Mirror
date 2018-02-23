@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace SmartMirror
 {
-    static class Weather
-    {
+	static class Weather
+	{
 		// 12 hour forecast
 		public static List<int> hourlyTempList = new List<int>();
 		public static List<int> hourlyPrecipChance = new List<int>();
@@ -21,28 +21,28 @@ namespace SmartMirror
 
 		public static string errorMessage = "";
 
-        // Updates the forecast for the next 12 hours
-        static public void UpdateHourlyForecast(int currentHrFloor)
-        {
+		// Updates the forecast for the next 12 hours
+		static public void UpdateHourlyForecast(int currentHrFloor)
+		{
 			errorMessage = "";
-            WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
 
-            // Try to get the forecast from wunderground
-            try
-            {
-                WebResponse response = request.GetResponseAsync().Result;
-                Stream dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string responseStr = reader.ReadToEnd();
+			// Try to get the forecast from wunderground
+			try
+			{
+				WebResponse response = request.GetResponseAsync().Result;
+				Stream dataStream = response.GetResponseStream();
+				StreamReader reader = new StreamReader(dataStream);
+				string responseStr = reader.ReadToEnd();
 				hourlyTempList.Clear();
 				hourlyPrecipChance.Clear();
 
 				hourlyTempList.Add(currTemp);
-                // For the next 11 hours Ceilinged so 12:36am will only read hour 1am
-                for (int hr = currentHrFloor; hr < currentHrFloor + 12; hr++)
-                {
-                    responseStr = responseStr.Substring(responseStr.IndexOf("temp") + 20);
-                    int temp = int.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
+				// For the next 11 hours Ceilinged so 12:36am will only read hour 1am
+				for (int hr = currentHrFloor; hr < currentHrFloor + 12; hr++)
+				{
+					responseStr = responseStr.Substring(responseStr.IndexOf("temp") + 20);
+					int temp = int.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
 					hourlyTempList.Add(temp);
 
 					responseStr = responseStr.Substring(responseStr.IndexOf("pop") + 7);
@@ -50,12 +50,12 @@ namespace SmartMirror
 					int pop = (int)Double.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
 					hourlyPrecipChance.Add(pop);
 				}
-            }
-            catch (Exception e)
-            {
+			}
+			catch (Exception e)
+			{
 				errorMessage = "Can't get hourly forecast";
-            }
-        }
+			}
+		}
 
 		// Updates the current temperature and conditions string
 		public static void UpdateWeather()
@@ -119,5 +119,6 @@ namespace SmartMirror
 				errorMessage = "Can't get day forecast";
 			}
 		}
+
 	}
 }
