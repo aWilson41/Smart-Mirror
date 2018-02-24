@@ -21,13 +21,13 @@ namespace SmartMirror
 
 		private static string errorMessage = "";
 
-		public static int getHighTemp() { return highTemp; }
-		public static int getLowTemp() { return lowTemp; }
-		public static int getCurrTemp() { return currTemp; }
-		public static string getForecastMsg() { return forecastMessage; }
-		public static string getErrorMsg() { return errorMessage; }
-		public static List<int> getForecast() { return hourlyTempList; }
-		public static List<int> getPrecipitation() { return hourlyPrecipChance; }
+		public static int GetHighTemp() { return highTemp; }
+		public static int GetLowTemp() { return lowTemp; }
+		public static int GetCurrTemp() { return currTemp; }
+		public static string GetForecastMsg() { return forecastMessage; }
+		public static string GetErrorMsg() { return errorMessage; }
+		public static List<int> GetForecast() { return hourlyTempList; }
+		public static List<int> GetPrecipitation() { return hourlyPrecipChance; }
 
 		// Updates the forecast for the next 12 hours
 		static public void UpdateHourlyForecast(int currentHrFloor)

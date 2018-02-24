@@ -67,7 +67,7 @@ namespace SmartMirror
 		}
 
 		// Sets the weather forecast/timeline given the temperatures
-		public void SetWeatherLine(DateTime dateTime, List<int> tempForecast, List<int> precipForecast)
+		public void Set12HrForecast(DateTime dateTime, List<int> tempForecast, List<int> precipForecast)
 		{
 			if (tempForecast.Count <= 0 || precipForecast.Count <= 0)
 				return;
@@ -219,7 +219,7 @@ namespace SmartMirror
 		}
 
 		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
-		// class but I only have one math function for geometrical purposes)
+		// class but why make a mathehelper class with one function in it)
 		static Point catmullRom(Point p0, Point p1, Point p2, Point p3, float t)
 		{
 			float t2 = t * t;

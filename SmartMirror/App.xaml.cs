@@ -11,6 +11,7 @@ namespace SmartMirror
     {
 		Frame frame;
 		MainPage mainPage;
+		WeatherPage weatherPage;
 
 		DateTime currDateTime = new DateTime();
 		DateTime prevDateTime = new DateTime();
@@ -78,36 +79,36 @@ namespace SmartMirror
 		private void Update12HrForecast()
 		{
 			Weather.UpdateHourlyForecast(currDateTime.Hour);
-			string errorMsg = Weather.getErrorMsg();
+			string errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
 			{
 				// Add error dialog
 				return;
 			}
-			mainPage.SetWeatherLine(currDateTime, Weather.getForecast(), Weather.getPrecipitation());
+			mainPage.Set12HrForecast(currDateTime, Weather.GetForecast(), Weather.GetPrecipitation());
 		}
 
 		private void UpdateWeather()
 		{
 			// Update the current weather conditions
 			Weather.UpdateWeather();
-			string errorMsg = Weather.getErrorMsg();
+			string errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
 			{
 				// Add error dialog popup
 				return;
 			}
-			mainPage.SetCurrentConditions(Weather.getCurrTemp(), Weather.getForecastMsg());
+			mainPage.SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetForecastMsg());
 
 			// Update the days forecast
 			Weather.UpdateDaysForecast();
-			errorMsg = Weather.getErrorMsg();
+			errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
 			{
 				// Add error dialog popup
 				return;
 			}
-			mainPage.SetTodaysForecast(Weather.getHighTemp(), Weather.getLowTemp());
+			mainPage.SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
 		}
 
 
