@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Collections.Generic;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -13,9 +12,6 @@ namespace SmartMirror
 {
 	public sealed partial class MainPage : Page
 	{
-		DateTime currDateTime = new DateTime();
-		DateTime prevDateTime = new DateTime();
-
 		public MainPage()
 		{
 			InitializeComponent();
@@ -23,128 +19,68 @@ namespace SmartMirror
 
 			ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
 			//ApplicationView.GetForCurrentView().ExitFullScreenMode();
-
-			// Update the date text (month/date/time)
-			UpdateDate();
-
-			// Set the hour and minute hand
-			SetHourHand();
-			SetMinuteHand();
-			// Set the weather and the weather forecast
-			UpdateWeather();
-			UpdateWeatherLine(currDateTime.Hour);
-
-			// Setup the timer to update the date continously
-			DispatcherTimer timer = new DispatcherTimer();
-			timer.Tick += new EventHandler<object>(Update);
-			timer.Interval = new TimeSpan(0, 0, 1);
-			timer.Start();
 		}
 
-		// Updates the clock
-		private void Update(object sender, object e)
+		public void SetDate(DateTime currDateTime)
 		{
-			UpdateDate();
-
-			// If the minute changed
-			if (currDateTime.Minute != prevDateTime.Minute)
+			month.Text = currDateTime.ToString("MMM", CultureInfo.InvariantCulture);
+			// Suffix is th unless it has a 1, 2, or 3 on the end. Only works 10s digits. (But days only go up to 31)
+			string suffix = "th";
+			int value = currDateTime.Day % 10;
+			if (currDateTime.Day - value != 10)
 			{
-				// Update the hour/minute hand
-				SetMinuteHand();
-				SetHourHand();
-
-				// Every 15 minutes update the weather
-				if (currDateTime.Minute % 15 == 0)
-					UpdateWeather();
-
-				// If the hour changes update the weatherline
-				if (currDateTime.Hour != prevDateTime.Hour)
-					UpdateWeatherLine(currDateTime.Hour);
+				if (value == 1)
+					suffix = "st";
+				else if (value == 2)
+					suffix = "nd";
+				else if (value == 3)
+					suffix = "rd";
 			}
+			day.Text = currDateTime.Day.ToString() + suffix;
 		}
 
-		private void UpdateDate()
+		public void SetTime(DateTime currDateTime)
 		{
-			// Push back the state
-			prevDateTime = currDateTime;
-			// Update the current state
-			currDateTime = DateTime.Now;
-
-			// Don't waste time on this if the day hasn't changed
-			if (currDateTime.Day != prevDateTime.Day)
-			{
-				month.Text = currDateTime.ToString("MMM", CultureInfo.InvariantCulture);
-				// Suffix is th unless it has a 1, 2, or 3 on the end. Only works 10s digits. (But days only go up to 31)
-				string suffix = "th";
-				int value = currDateTime.Day % 10;
-				if (currDateTime.Day - value != 10)
-				{
-					if (value == 1)
-						suffix = "st";
-					else if (value == 2)
-						suffix = "nd";
-					else if (value == 3)
-						suffix = "rd";
-				}
-				day.Text = currDateTime.Day.ToString() + suffix;
-			}
 			time.Text = currDateTime.ToString("hh:mm tt");
 			// Remove preceding zero (ie first zero in 01:00)
 			if (time.Text[0] == '0')
 				time.Text = time.Text.Remove(0, 1);
 		}
 
-		private void UpdateWeather()
+		public void SetTodaysForecast(int high, int low)
 		{
-			// Set the current conditions and forecast
-			Weather.UpdateWeather();
-			if (Weather.errorMessage != "")
-			{
-				month.Text = Weather.errorMessage;
-				return;
-			}
-			weather.Text = Weather.forecastMessage + " at " + Weather.currTemp.ToString() + (char)176;
-
-			Weather.UpdateDaysForecast();
-			if (Weather.errorMessage != "")
-			{
-				month.Text = Weather.errorMessage;
-				return;
-			}
 			// Snap High and Low next to weather text
 			double posX = (double)weather.GetValue(Canvas.LeftProperty);
 			weather.Measure(new Size(990, 101));
 			double width = weather.ActualWidth * 0.5 + 200;
 
-			weatherLow.Text = Weather.lowTemp.ToString();
+			weatherLow.Text = low.ToString();
 			weatherLow.SetValue(Canvas.LeftProperty, width);
 
-			weatherHigh.Text = Weather.highTemp.ToString();
+			weatherHigh.Text = high.ToString();
 			weatherHigh.SetValue(Canvas.LeftProperty, width);
 		}
 
-		// Updates the weather line from the current hour
-		private void UpdateWeatherLine(int currentHr)
+		public void SetCurrentConditions(int currTemp, string currConditions)
 		{
-			Weather.UpdateHourlyForecast(currentHr);
-			if (Weather.errorMessage != "")
-			{
-				month.Text = Weather.errorMessage;
-				return;
-			}
-			List<int> weather = new List<int>(Weather.hourlyTempList);
-			if (weather.Count <= 0)
+			weather.Text = currConditions + " at " + currTemp.ToString() + (char)176;
+		}
+
+		// Sets the weather forecast/timeline given the temperatures
+		public void SetWeatherLine(DateTime dateTime, List<int> tempForecast, List<int> precipForecast)
+		{
+			if (tempForecast.Count <= 0 || precipForecast.Count <= 0)
 				return;
 
 			// Find the max and min temperature
-			int min = weather[0];
-			int max = weather[0];
-			for (int i = 1; i < weather.Count; i++)
+			int min = tempForecast[0];
+			int max = tempForecast[0];
+			for (int i = 1; i < tempForecast.Count; i++)
 			{
-				if (weather[i] < min)
-					min = weather[i];
-				if (weather[i] > max)
-					max = weather[i];
+				if (tempForecast[i] < min)
+					min = tempForecast[i];
+				if (tempForecast[i] > max)
+					max = tempForecast[i];
 			}
 
 			// Floor the min to the nearest 10s
@@ -193,7 +129,7 @@ namespace SmartMirror
 			for (int i = 0; i < WeatherTimeLabel.Children.Count; i++)
 			{
 				TextBlock label = WeatherTimeLabel.Children[i] as TextBlock;
-				int hr = currentHr + i;
+				int hr = dateTime.Hour + i;
 				// Adding i could cause the value to overflow
 				if (hr > 24)
 					hr -= 24;
@@ -215,7 +151,7 @@ namespace SmartMirror
 			for (int i = 0; i < 12; i++)
 			{
 				double x = i * WeatherGraphBorder.Width / 11.0;
-				double y = WeatherGraphBorder.Height - (weather[i] - minFloor) * WeatherGraphBorder.Height / (maxCeil - minFloor);
+				double y = WeatherGraphBorder.Height - (tempForecast[i] - minFloor) * WeatherGraphBorder.Height / (maxCeil - minFloor);
 				pts.Add(new Point(x, y));
 
 				Ellipse circle = new Ellipse();
@@ -227,7 +163,7 @@ namespace SmartMirror
 				WeatherCanvas.Children.Add(circle);
 
 				TextBlock popText = new TextBlock();
-				popText.Text = Weather.hourlyPrecipChance[i].ToString() + "%";
+				popText.Text = precipForecast[i].ToString() + "%";
 				popText.FontFamily = new FontFamily("Assets/AGENCYB.TTF#Agency FB");
 				popText.FontSize = 20.0;
 				popText.Foreground = new SolidColorBrush(Windows.UI.Colors.White);
@@ -261,7 +197,8 @@ namespace SmartMirror
 			}
 		}
 
-		private void SetHourHand()
+		// Given current date/time, updates the hour hand to reflect the hour
+		public void SetHourHand(DateTime currDateTime)
 		{
 			RotateTransform rTransform = new RotateTransform();
 
@@ -273,14 +210,16 @@ namespace SmartMirror
 			HourHand.RenderTransform = rTransform;
 		}
 
-		private void SetMinuteHand()
+		// Given current date/time, updates the minute hand to reflect the minute
+		public void SetMinuteHand(DateTime currDateTime)
 		{
 			RotateTransform rTransform = new RotateTransform();
 			rTransform.Angle = currDateTime.TimeOfDay.Minutes / 60.0 * 360.0 - 90.0;
 			MinuteHand.RenderTransform = rTransform;
 		}
 
-		// Catmull rom for weather curves
+		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
+		// class but I only have one math function for geometrical purposes)
 		static Point catmullRom(Point p0, Point p1, Point p2, Point p3, float t)
 		{
 			float t2 = t * t;

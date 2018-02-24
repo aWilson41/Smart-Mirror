@@ -8,18 +8,26 @@ namespace SmartMirror
 	static class Weather
 	{
 		// 12 hour forecast
-		public static List<int> hourlyTempList = new List<int>();
-		public static List<int> hourlyPrecipChance = new List<int>();
+		private static List<int> hourlyTempList = new List<int>();
+		private static List<int> hourlyPrecipChance = new List<int>();
 
 		// Day's forecast (high/low)
-		public static int highTemp = 0;
-		public static int lowTemp = 0;
+		private static int highTemp = 0;
+		private static int lowTemp = 0;
 
 		// Current temp and conditions
-		public static int currTemp = 0;
-		public static string forecastMessage = "";
+		private static int currTemp = 0;
+		private static string forecastMessage = "";
 
-		public static string errorMessage = "";
+		private static string errorMessage = "";
+
+		public static int getHighTemp() { return highTemp; }
+		public static int getLowTemp() { return lowTemp; }
+		public static int getCurrTemp() { return currTemp; }
+		public static string getForecastMsg() { return forecastMessage; }
+		public static string getErrorMsg() { return errorMessage; }
+		public static List<int> getForecast() { return hourlyTempList; }
+		public static List<int> getPrecipitation() { return hourlyPrecipChance; }
 
 		// Updates the forecast for the next 12 hours
 		static public void UpdateHourlyForecast(int currentHrFloor)
