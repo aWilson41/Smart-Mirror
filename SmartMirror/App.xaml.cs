@@ -7,8 +7,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SmartMirror
 {
-    sealed partial class App : Application
-    {
+	sealed partial class App : Application
+	{
 		Frame frame;
 		MainPage mainPage;
 		WeatherPage weatherPage;
@@ -17,8 +17,8 @@ namespace SmartMirror
 		DateTime prevDateTime = new DateTime();
 
 		public App()
-        {
-            this.InitializeComponent();
+		{
+			this.InitializeComponent();
 			this.Suspending += OnSuspending;
 		}
 
@@ -126,7 +126,6 @@ namespace SmartMirror
 			{
 				// Create a Frame to act as the navigation context and navigate to the first page
 				frame = new Frame();
-
 				frame.NavigationFailed += OnNavigationFailed;
 
 				//if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -154,17 +153,17 @@ namespace SmartMirror
 			}
 		}
 
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
+		void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+		{
+			throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+		}
 
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
-            deferral.Complete();
-        }
+		private void OnSuspending(object sender, SuspendingEventArgs e)
+		{
+			var deferral = e.SuspendingOperation.GetDeferral();
+			//TODO: Save application state and stop any background activity
+			deferral.Complete();
+		}
 
-    }
+	}
 }
