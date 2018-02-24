@@ -5,11 +5,16 @@ using System.Collections.Generic;
 
 namespace SmartMirror
 {
+	// TODO: Rework the forecast functionality. Shouldn't be storing the data like this
 	static class Weather
 	{
 		// 12 hour forecast
-		private static List<int> hourlyTempList = new List<int>();
-		private static List<int> hourlyPrecipChance = new List<int>();
+		private static List<int> hourTempList = new List<int>();
+		private static List<int> hourPrecipChance = new List<int>();
+
+		// 12 day forecast
+		private static List<int> dayTempList = new List<int>();
+		private static List<int> dayPrecipChance = new List<int>();
 
 		// Day's forecast (high/low)
 		private static int highTemp = 0;
@@ -26,11 +31,11 @@ namespace SmartMirror
 		public static int GetCurrTemp() { return currTemp; }
 		public static string GetForecastMsg() { return forecastMessage; }
 		public static string GetErrorMsg() { return errorMessage; }
-		public static List<int> GetForecast() { return hourlyTempList; }
-		public static List<int> GetPrecipitation() { return hourlyPrecipChance; }
+		public static List<int> GetForecast() { return hourTempList; }
+		public static List<int> GetPrecipitation() { return hourPrecipChance; }
 
 		// Updates the forecast for the next 12 hours
-		static public void UpdateHourlyForecast(int currentHrFloor)
+		static public void Update12HrForecast(int currentHrFloor)
 		{
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
@@ -126,6 +131,16 @@ namespace SmartMirror
 			{
 				errorMessage = "Can't get day forecast";
 			}
+		}
+
+		public static void UpdateWeatherGIF()
+		{
+
+		}
+
+		public static void Update12DayForecast()
+		{
+
 		}
 
 	}

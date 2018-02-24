@@ -11,7 +11,7 @@ namespace SmartMirror
 	{
 		Frame frame;
 		MainPage mainPage;
-		WeatherPage weatherPage;
+		//WeatherPage weatherPage; Not yet implemented
 
 		DateTime currDateTime = new DateTime();
 		DateTime prevDateTime = new DateTime();
@@ -78,7 +78,7 @@ namespace SmartMirror
 
 		private void Update12HrForecast()
 		{
-			Weather.UpdateHourlyForecast(currDateTime.Hour);
+			Weather.Update12HrForecast(currDateTime.Hour);
 			string errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
 			{
