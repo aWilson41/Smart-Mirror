@@ -26,6 +26,10 @@ namespace SmartMirror
 
 		private static string errorMessage = "";
 
+		private static DateTime lastUpdated12HrForecast;
+		private static DateTime lastUpdatedDaysForecast;
+		private static DateTime lastUpdatedCurrentConditions;
+
 		public static int GetHighTemp() { return highTemp; }
 		public static int GetLowTemp() { return lowTemp; }
 		public static int GetCurrTemp() { return currTemp; }
@@ -33,10 +37,14 @@ namespace SmartMirror
 		public static string GetErrorMsg() { return errorMessage; }
 		public static List<int> GetForecast() { return hourlyTempList; }
 		public static List<int> GetPrecipitation() { return hourlyPrecipChance; }
+		public static DateTime GetLastUpdated12HrForecast() { return lastUpdated12HrForecast; }
+		public static DateTime GetLastUpdatedDaysForecast() { return lastUpdatedDaysForecast; }
+		public static DateTime GetLastUpdatedCurrentConditions() { return lastUpdatedCurrentConditions; }
 
 		// Updates the forecast for the next 12 hours
 		static public void Update12HrForecast(int currentHrFloor)
 		{
+			lastUpdated12HrForecast = DateTime.Now;
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
 
@@ -71,8 +79,9 @@ namespace SmartMirror
 		}
 
 		// Updates the current temperature and conditions string
-		public static void UpdateWeather()
+		public static void UpdateCurrentConditions()
 		{
+			lastUpdatedCurrentConditions = DateTime.Now;
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/75002.json");
 
@@ -106,6 +115,7 @@ namespace SmartMirror
 		// Updates the days (24hr) forecast (high/low)
 		public static void UpdateDaysForecast()
 		{
+			lastUpdatedDaysForecast = DateTime.Now;
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/75002.json");
 
@@ -133,15 +143,15 @@ namespace SmartMirror
 			}
 		}
 
-		public static void UpdateWeatherGIF()
-		{
+		//public static void UpdateWeatherGIF()
+		//{
 
-		}
+		//}
 
-		public static void Update12DayForecast()
-		{
+		//public static void Update12DayForecast()
+		//{
 
-		}
+		//}
 
 	}
 }

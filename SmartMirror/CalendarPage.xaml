@@ -12,7 +12,7 @@
 			<Canvas.RenderTransform>
 				<CompositeTransform Rotation="-90" TranslateX="500" TranslateY="770"/>
 			</Canvas.RenderTransform>
-			<Button x:Name="Button" Content="To Main Page" Canvas.Left="-223" Canvas.Top="185" Background="#33000000" Foreground="White" Height="539" Width="925" FontSize="72" Click="Button_Click"/>
+			<Button x:Name="Button" Content="Too Main Page" Canvas.Left="-16" Canvas.Top="395" Background="#33000000" Foreground="White" Height="131" Width="550" FontSize="72" Click="Button_Click" BorderBrush="White"/>
 		</Canvas>
 	</Canvas>
 </Page>

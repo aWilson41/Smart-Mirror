@@ -10,17 +10,36 @@ namespace SmartMirror
 	sealed partial class App : Application
 	{
 		Frame frame;
-		MainPage mainPage;
-		WeatherPage weatherPage; // Not yet implemented
+		GPIOButtonListener buttonListener = new GPIOButtonListener();
+		int currPage = 0;
 
 		public App()
 		{
-			this.InitializeComponent();
-			this.Suspending += OnSuspending;
+			InitializeComponent();
+			Suspending += OnSuspending;
+
+			// Setup button for listening
+			buttonListener.StartListener();
+			// hook up button pressed to cyclepage
+			buttonListener.ButtonPressed += CyclePage;
+		}
+
+		// Cycles through navigation
+		protected void CyclePage(object sender, EventArgs e)
+		{
+			currPage = (currPage + 1) % 3;
+
+			if (currPage == 0)
+				frame.Navigate(typeof(MainPage), null);
+			else if (currPage == 1)
+				frame.Navigate(typeof(WeatherPage), null);
+			else if (currPage == 2)
+				frame.Navigate(typeof(CalendarPage), null);
 		}
 
 		protected override void OnLaunched(LaunchActivatedEventArgs e)
 		{
+			// Template junk for setting up initial page
 			frame = Window.Current.Content as Frame;
 
 			// If the frame hasn't been created yet then create it
@@ -41,22 +60,19 @@ namespace SmartMirror
 			if (e.PrelaunchActivated == false)
 			{
 				if (frame.Content == null)
-				{
 					// Navigate to a new main page and save that main page
 					frame.Navigate(typeof(MainPage), e.Arguments);
-					mainPage = (MainPage)frame.Content;
-				}
 				// Ensure the current window is active
 				Window.Current.Activate();
 			}
 		}
 
-		void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+		protected void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
 		{
 			throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
 		}
 
-		private void OnSuspending(object sender, SuspendingEventArgs e)
+		protected void OnSuspending(object sender, SuspendingEventArgs e)
 		{
 			var deferral = e.SuspendingOperation.GetDeferral();
 			//TODO: Save application state and stop any background activity

@@ -15,7 +15,6 @@ namespace SmartMirror
 	public sealed partial class MainPage : Page
 	{
 		DispatcherTimer timer;
-
 		DateTime currDateTime = new DateTime();
 		DateTime prevDateTime = new DateTime();
 
@@ -237,14 +236,9 @@ namespace SmartMirror
 				// Update the hour/minute hand
 				SetHourHand(currDateTime);
 				SetMinuteHand(currDateTime);
-
-				// Every 15 minutes update the weather
-				if (currDateTime.Minute % 15 == 0)
-					UpdateWeather();
-
-				// If the hour changes update the weatherline
-				if (currDateTime.Hour != prevDateTime.Hour)
-					Update12HrForecast();
+				// Update the current conditions and 12 hour forecast
+				UpdateCurrentConditions();
+				Update12HrForecast();
 			}
 		}
 
@@ -265,37 +259,47 @@ namespace SmartMirror
 
 		private void Update12HrForecast()
 		{
-			Weather.Update12HrForecast(currDateTime.Hour);
-			string errorMsg = Weather.GetErrorMsg();
-			if (errorMsg != "")
+			// Only update it if it's out of date
+			if (DateTime.Now.TimeOfDay.TotalMinutes - Weather.GetLastUpdated12HrForecast().TimeOfDay.TotalMinutes > 15)
 			{
-				// Add error dialog
-				return;
+				Weather.Update12HrForecast(currDateTime.Hour);
+				string errorMsg = Weather.GetErrorMsg();
+				if (errorMsg != "")
+				{
+					// Add error dialog
+					return;
+				}
 			}
 			Set12HrForecast(currDateTime, Weather.GetForecast(), Weather.GetPrecipitation());
 		}
 
-		private void UpdateWeather()
+		private void UpdateCurrentConditions()
 		{
-			// Update the current weather conditions
-			Weather.UpdateWeather();
-			string errorMsg = Weather.GetErrorMsg();
-			if (errorMsg != "")
+			// Update the current weather conditions as long as it's out of date (by 15mins)
+			if (DateTime.Now.TimeOfDay.TotalMinutes - Weather.GetLastUpdatedCurrentConditions().TimeOfDay.TotalMinutes > 15)
 			{
-				// Add error dialog popup
-				return;
+				Weather.UpdateCurrentConditions();
+				string errorMsg = Weather.GetErrorMsg();
+				if (errorMsg != "")
+				{
+					// Add error dialog popup
+					return;
+				}
 			}
 			SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetForecastMsg());
 
-			// Update the days forecast
-			Weather.UpdateDaysForecast();
-			errorMsg = Weather.GetErrorMsg();
-			if (errorMsg != "")
+			// Update the days forecast as long as it's out of date (by 60mins)
+			if (DateTime.Now.TimeOfDay.TotalMinutes - Weather.GetLastUpdatedDaysForecast().TimeOfDay.TotalMinutes > 60)
 			{
-				// Add error dialog popup
-				return;
+				Weather.UpdateDaysForecast();
+				string errorMsg = Weather.GetErrorMsg();
+				if (errorMsg != "")
+				{
+					// Add error dialog popup
+					return;
+				}
+				SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
 			}
-			SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
 		}
 
 		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
@@ -313,16 +317,17 @@ namespace SmartMirror
 		{
 			// Initialize the date
 			UpdateDate();
+
+			// Update the hour/minute hand
 			SetHourHand(currDateTime);
 			SetMinuteHand(currDateTime);
-
-			// Initialize the weather
-			UpdateWeather();
+			// Update the current conditions and 12 hour forecast
+			UpdateCurrentConditions();
 			Update12HrForecast();
 
 			// Start the timer
 			timer = new DispatcherTimer();
-			timer.Tick += new EventHandler<object>(Update);
+			timer.Tick += Update;
 			timer.Interval = new TimeSpan(0, 0, 1);
 			timer.Start();
 
@@ -332,13 +337,15 @@ namespace SmartMirror
 		protected override void OnNavigatedFrom(NavigationEventArgs e)
 		{
 			// Stop the timer
+			timer.Tick -= Update;
 			timer.Stop();
 
 			base.OnNavigatedFrom(e);
 		}
 
-		// Test
-		private void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+
+		// Temporary
+		private void button_Click(object sender, RoutedEventArgs e)
 		{
 			Frame frame = Window.Current.Content as Frame;
 			frame.Navigate(typeof(WeatherPage), null);
