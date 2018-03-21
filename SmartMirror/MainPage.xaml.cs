@@ -7,19 +7,26 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
 using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Navigation;
 
 namespace SmartMirror
 {
 	public sealed partial class MainPage : Page
 	{
+		DispatcherTimer timer;
+
+		DateTime currDateTime = new DateTime();
+		DateTime prevDateTime = new DateTime();
+
 		public MainPage()
 		{
 			InitializeComponent();
 			DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
-
 			ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
 			//ApplicationView.GetForCurrentView().ExitFullScreenMode();
 		}
+
 
 		public void SetDate(DateTime currDateTime)
 		{
@@ -218,6 +225,79 @@ namespace SmartMirror
 			MinuteHand.RenderTransform = rTransform;
 		}
 
+
+		// Updates the clock
+		public void Update(object sender, object e)
+		{
+			UpdateDate();
+
+			// If the minute changed
+			if (currDateTime.Minute != prevDateTime.Minute)
+			{
+				// Update the hour/minute hand
+				SetHourHand(currDateTime);
+				SetMinuteHand(currDateTime);
+
+				// Every 15 minutes update the weather
+				if (currDateTime.Minute % 15 == 0)
+					UpdateWeather();
+
+				// If the hour changes update the weatherline
+				if (currDateTime.Hour != prevDateTime.Hour)
+					Update12HrForecast();
+			}
+		}
+
+		private void UpdateDate()
+		{
+			// Push back the state
+			prevDateTime = currDateTime;
+			// Update the current state
+			currDateTime = DateTime.Now;
+
+			// Only update the date when the day changes
+			if (currDateTime.Day != prevDateTime.Day)
+				SetDate(currDateTime);
+
+			// Always update the time
+			SetTime(currDateTime);
+		}
+
+		private void Update12HrForecast()
+		{
+			Weather.Update12HrForecast(currDateTime.Hour);
+			string errorMsg = Weather.GetErrorMsg();
+			if (errorMsg != "")
+			{
+				// Add error dialog
+				return;
+			}
+			Set12HrForecast(currDateTime, Weather.GetForecast(), Weather.GetPrecipitation());
+		}
+
+		private void UpdateWeather()
+		{
+			// Update the current weather conditions
+			Weather.UpdateWeather();
+			string errorMsg = Weather.GetErrorMsg();
+			if (errorMsg != "")
+			{
+				// Add error dialog popup
+				return;
+			}
+			SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetForecastMsg());
+
+			// Update the days forecast
+			Weather.UpdateDaysForecast();
+			errorMsg = Weather.GetErrorMsg();
+			if (errorMsg != "")
+			{
+				// Add error dialog popup
+				return;
+			}
+			SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
+		}
+
 		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
 		// class but why make a mathehelper class with one function in it)
 		static Point catmullRom(Point p0, Point p1, Point p2, Point p3, float t)
@@ -228,5 +308,40 @@ namespace SmartMirror
 				0.5f * ((2.0f * p1.Y) + (-p0.Y + p2.Y) * t + (2.0f * p0.Y - 5.0f * p1.Y + 4.0f * p2.Y - p3.Y) * t2 + (-p0.Y + 3.0f * p1.Y - 3.0f * p2.Y + p3.Y) * t3));
 		}
 
+
+		protected override void OnNavigatedTo(NavigationEventArgs e)
+		{
+			// Initialize the date
+			UpdateDate();
+			SetHourHand(currDateTime);
+			SetMinuteHand(currDateTime);
+
+			// Initialize the weather
+			UpdateWeather();
+			Update12HrForecast();
+
+			// Start the timer
+			timer = new DispatcherTimer();
+			timer.Tick += new EventHandler<object>(Update);
+			timer.Interval = new TimeSpan(0, 0, 1);
+			timer.Start();
+
+			base.OnNavigatedTo(e);
+		}
+
+		protected override void OnNavigatedFrom(NavigationEventArgs e)
+		{
+			// Stop the timer
+			timer.Stop();
+
+			base.OnNavigatedFrom(e);
+		}
+
+		// Test
+		private void button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		{
+			Frame frame = Window.Current.Content as Frame;
+			frame.Navigate(typeof(WeatherPage), null);
+		}
 	}
 }

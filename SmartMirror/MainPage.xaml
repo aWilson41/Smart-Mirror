@@ -53,6 +53,7 @@
 					<Rectangle x:Name="CopyRect" Fill="#FFF4F4F5" Height="2" Width="952" Canvas.Top="118" Canvas.Left="0" Stroke="White" Visibility="Collapsed"/>
 				</Canvas>
 			</Border>
+			<Button x:Name="button" Content="Navigate Test" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click"/>
 		</Canvas>
 	</Canvas>
 </Page>

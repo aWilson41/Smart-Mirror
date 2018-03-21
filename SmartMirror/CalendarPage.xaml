@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="SmartMirror.CalendarPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SmartMirror"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+	<Canvas x:Name="MainCanvas" Background="Black">
+		<Canvas x:Name="SubCanvas">
+			<Canvas.RenderTransform>
+				<CompositeTransform Rotation="-90" TranslateX="500" TranslateY="770"/>
+			</Canvas.RenderTransform>
+			<Button x:Name="Button" Content="To Main Page" Canvas.Left="-223" Canvas.Top="185" Background="#33000000" Foreground="White" Height="539" Width="925" FontSize="72" Click="Button_Click"/>
+		</Canvas>
+	</Canvas>
+</Page>

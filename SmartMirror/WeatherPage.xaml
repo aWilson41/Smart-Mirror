@@ -8,11 +8,11 @@
 	mc:Ignorable="d">
 
 	<Canvas x:Name="MainCanvas" Background="Black">
-		<!--<Image Margin="20" HorizontalAlignment="Left" Stretch="None">
-			<Image.Source>
-				<BitmapImage x:Name="ClickToPlaySource" AutoPlay="False"
-                        UriSource="Images\sample.gif" ImageOpened="ClickToPlaySource_ImageOpened" />
-			</Image.Source>
-		</Image>-->
+		<Canvas x:Name="SubCanvas">
+			<Canvas.RenderTransform>
+				<CompositeTransform Rotation="-90" TranslateX="500" TranslateY="770"/>
+			</Canvas.RenderTransform>
+			<Button x:Name="Button" Content="To Calendar" Canvas.Left="-223" Canvas.Top="185" Background="#33000000" Foreground="White" Height="539" Width="925" FontSize="72" Click="Button_Click"/>
+		</Canvas>
 	</Canvas>
 </Page>
