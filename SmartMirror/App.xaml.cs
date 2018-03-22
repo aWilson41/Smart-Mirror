@@ -50,7 +50,7 @@ namespace SmartMirror
 
 				//if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
 				//{
-				////TODO: Load state from previously suspended application
+				//// TODO: Load state from previously suspended application
 				//}
 
 				// Place the frame in the current Window
@@ -60,8 +60,15 @@ namespace SmartMirror
 			if (e.PrelaunchActivated == false)
 			{
 				if (frame.Content == null)
+				{
+					// On app start we should update the weather
+					Weather.UpdateCurrentConditions(null, null);
+					Weather.UpdateDaysForecast(null, null);
+					Weather.UpdateHourlyForecast(null, null);
+					
 					// Navigate to a new main page and save that main page
 					frame.Navigate(typeof(MainPage), e.Arguments);
+				}
 				// Ensure the current window is active
 				Window.Current.Activate();
 			}
@@ -75,7 +82,7 @@ namespace SmartMirror
 		protected void OnSuspending(object sender, SuspendingEventArgs e)
 		{
 			var deferral = e.SuspendingOperation.GetDeferral();
-			//TODO: Save application state and stop any background activity
+			// TODO: Save application state and stop any background activity
 			deferral.Complete();
 		}
 	}

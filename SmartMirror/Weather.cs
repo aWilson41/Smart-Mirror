@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Collections.Generic;
+using Windows.UI.Xaml;
 
 namespace SmartMirror
 {
@@ -26,10 +27,6 @@ namespace SmartMirror
 
 		private static string errorMessage = "";
 
-		private static DateTime lastUpdated12HrForecast;
-		private static DateTime lastUpdatedDaysForecast;
-		private static DateTime lastUpdatedCurrentConditions;
-
 		public static int GetHighTemp() { return highTemp; }
 		public static int GetLowTemp() { return lowTemp; }
 		public static int GetCurrTemp() { return currTemp; }
@@ -37,14 +34,31 @@ namespace SmartMirror
 		public static string GetErrorMsg() { return errorMessage; }
 		public static List<int> GetForecast() { return hourlyTempList; }
 		public static List<int> GetPrecipitation() { return hourlyPrecipChance; }
-		public static DateTime GetLastUpdated12HrForecast() { return lastUpdated12HrForecast; }
-		public static DateTime GetLastUpdatedDaysForecast() { return lastUpdatedDaysForecast; }
-		public static DateTime GetLastUpdatedCurrentConditions() { return lastUpdatedCurrentConditions; }
+
+		static Weather()
+		{
+			DispatcherTimer hourlyForecastTimer = new DispatcherTimer();
+			hourlyForecastTimer.Tick += UpdateHourlyForecast;
+			// Update the 12hr forecast every 30 minutes
+			hourlyForecastTimer.Interval = new TimeSpan(0, 30, 0);
+			hourlyForecastTimer.Start();
+
+			DispatcherTimer currentConditionsTimer = new DispatcherTimer();
+			currentConditionsTimer.Tick += UpdateCurrentConditions;
+			// Update the current conditions every 15 minutes
+			currentConditionsTimer.Interval = new TimeSpan(0, 15, 0);
+			currentConditionsTimer.Start();
+
+			DispatcherTimer daysForecastTimer = new DispatcherTimer();
+			daysForecastTimer.Tick += UpdateDaysForecast;
+			// Update the days forecast every 6 hours
+			daysForecastTimer.Interval = new TimeSpan(6, 0, 0);
+			daysForecastTimer.Start();
+		}
 
 		// Updates the forecast for the next 12 hours
-		static public void Update12HrForecast(int currentHrFloor)
+		static public void UpdateHourlyForecast(object sender, object args)
 		{
-			lastUpdated12HrForecast = DateTime.Now;
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
 
@@ -59,8 +73,7 @@ namespace SmartMirror
 				hourlyPrecipChance.Clear();
 
 				hourlyTempList.Add(currTemp);
-				// For the next 11 hours Ceilinged so 12:36am will only read hour 1am
-				for (int hr = currentHrFloor; hr < currentHrFloor + 12; hr++)
+				for (int hr = 0; hr < 12; hr++)
 				{
 					responseStr = responseStr.Substring(responseStr.IndexOf("temp") + 20);
 					int temp = int.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
@@ -79,9 +92,8 @@ namespace SmartMirror
 		}
 
 		// Updates the current temperature and conditions string
-		public static void UpdateCurrentConditions()
+		public static void UpdateCurrentConditions(object sender, object args)
 		{
-			lastUpdatedCurrentConditions = DateTime.Now;
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/75002.json");
 
@@ -113,9 +125,8 @@ namespace SmartMirror
 		}
 
 		// Updates the days (24hr) forecast (high/low)
-		public static void UpdateDaysForecast()
+		public static void UpdateDaysForecast(object sender, object args)
 		{
-			lastUpdatedDaysForecast = DateTime.Now;
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/75002.json");
 

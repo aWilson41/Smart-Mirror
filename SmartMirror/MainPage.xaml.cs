@@ -225,7 +225,7 @@ namespace SmartMirror
 		}
 
 
-		// Updates the clock
+		// Updates the date, clock, and weather
 		public void Update(object sender, object e)
 		{
 			UpdateDate();
@@ -259,47 +259,31 @@ namespace SmartMirror
 
 		private void Update12HrForecast()
 		{
-			// Only update it if it's out of date
-			if (DateTime.Now.TimeOfDay.TotalMinutes - Weather.GetLastUpdated12HrForecast().TimeOfDay.TotalMinutes > 15)
+			string errorMsg = Weather.GetErrorMsg();
+			if (errorMsg != "")
 			{
-				Weather.Update12HrForecast(currDateTime.Hour);
-				string errorMsg = Weather.GetErrorMsg();
-				if (errorMsg != "")
-				{
-					// Add error dialog
-					return;
-				}
+				// Add error dialog
+				return;
 			}
 			Set12HrForecast(currDateTime, Weather.GetForecast(), Weather.GetPrecipitation());
 		}
 
 		private void UpdateCurrentConditions()
 		{
-			// Update the current weather conditions as long as it's out of date (by 15mins)
-			if (DateTime.Now.TimeOfDay.TotalMinutes - Weather.GetLastUpdatedCurrentConditions().TimeOfDay.TotalMinutes > 15)
+			string errorMsg = Weather.GetErrorMsg();
+			if (errorMsg != "")
 			{
-				Weather.UpdateCurrentConditions();
-				string errorMsg = Weather.GetErrorMsg();
-				if (errorMsg != "")
-				{
-					// Add error dialog popup
-					return;
-				}
+				// Add error dialog popup
+				return;
 			}
 			SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetForecastMsg());
-
-			// Update the days forecast as long as it's out of date (by 60mins)
-			if (DateTime.Now.TimeOfDay.TotalMinutes - Weather.GetLastUpdatedDaysForecast().TimeOfDay.TotalMinutes > 60)
+			errorMsg = Weather.GetErrorMsg();
+			if (errorMsg != "")
 			{
-				Weather.UpdateDaysForecast();
-				string errorMsg = Weather.GetErrorMsg();
-				if (errorMsg != "")
-				{
-					// Add error dialog popup
-					return;
-				}
-				SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
+				// Add error dialog popup
+				return;
 			}
+			SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
 		}
 
 		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
