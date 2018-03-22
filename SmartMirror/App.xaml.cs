@@ -12,6 +12,7 @@ namespace SmartMirror
 		Frame frame;
 		GPIOButtonListener buttonListener = new GPIOButtonListener();
 		int currPage = 0;
+        HttpServer server;
 
 		public App()
 		{
@@ -22,6 +23,9 @@ namespace SmartMirror
 			buttonListener.StartListener();
 			// hook up button pressed to cyclepage
 			buttonListener.ButtonPressed += CyclePage;
+
+            // Initialize web server
+            server = new HttpServer(8090);
 		}
 
 		// Cycles through navigation
