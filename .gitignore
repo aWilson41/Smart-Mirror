@@ -6,8 +6,6 @@
 /SmartMirror/bin
 /SmartMirror/BundleArtifacts
 /SmartMirror/obj
-/SmartMirror/project.json
 /SmartMirror/project.lock.json
 /SmartMirror/SmartMirror.csproj.user
 /SmartMirror/SmartMirror_TemporaryKey.pfx
-/SmartMirror.sln
