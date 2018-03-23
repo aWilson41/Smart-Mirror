@@ -67,9 +67,10 @@ namespace SmartMirror
 				{
 					// On app start we should update the weather
 					Weather.UpdateCurrentConditions(null, null);
-					Weather.UpdateDaysForecast(null, null);
+					Weather.UpdateTodaysForecast(null, null);
 					Weather.UpdateHourlyForecast(null, null);
-					
+					Weather.Update10DayForecast(null, null);
+
 					// Navigate to a new main page and save that main page
 					frame.Navigate(typeof(MainPage), e.Arguments);
 				}
