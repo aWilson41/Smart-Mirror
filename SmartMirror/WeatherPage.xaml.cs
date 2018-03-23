@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.Collections.Generic;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
 using Windows.Foundation;
 using Windows.UI;
@@ -15,6 +12,8 @@ namespace SmartMirror
 {
 	public sealed partial class WeatherPage : Page
 	{
+		DispatcherTimer timer;
+
 		public WeatherPage()
 		{
 			InitializeComponent();
@@ -22,16 +21,6 @@ namespace SmartMirror
 			ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
 		}
 
-
-		public void SetTodaysForecast(int high, int low)
-		{
-
-		}
-
-		public void SetCurrentConditions(int currTemp, string currConditions)
-		{
-
-		}
 
 		// Sets the weather forecast/timeline given the temperatures
 		public void Set12HrForecast(DateTime dateTime, List<int> tempForecast, List<int> precipForecast)
@@ -116,11 +105,6 @@ namespace SmartMirror
 			}
 		}
 
-		public void SetWeatherGIF()
-		{
-
-		}
-
 		public void Set10DayForecast(DateTime dateTime, List<int> tempForecast, List<int> precipForecast)
 		{
 			if (tempForecast.Count <= 0 || precipForecast.Count <= 0 || tempForecast.Count != precipForecast.Count)
@@ -162,7 +146,7 @@ namespace SmartMirror
 		}
 
 
-		private void Update12HrForecast()
+		private void Update12HrForecast(object sender, object args)
 		{
 			string errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
@@ -173,7 +157,7 @@ namespace SmartMirror
 			Set12HrForecast(DateTime.Now, Weather.GetHourlyForecast(), Weather.GetHourlyPrecipitation());
 		}
 
-		private void Update10DayForecast()
+		private void Update10DayForecast(object sender, object args)
 		{
 			string errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
@@ -187,14 +171,16 @@ namespace SmartMirror
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
-			Update12HrForecast();
-			Update10DayForecast();
+			// Manually update the weather
+			Update12HrForecast(null, null);
+			Update10DayForecast(null, null);
 
-			// Start the timer
-			//timer = new DispatcherTimer();
-			//timer.Tick += Update;
-			//timer.Interval = new TimeSpan(0, 0, 1);
-			//timer.Start();
+			// Start the timer to update it every hour
+			timer = new DispatcherTimer();
+			timer.Tick += Update12HrForecast;
+			timer.Tick += Update10DayForecast;
+			timer.Interval = new TimeSpan(1, 0, 0);
+			timer.Start();
 
 			base.OnNavigatedTo(e);
 		}
@@ -208,6 +194,8 @@ namespace SmartMirror
 			base.OnNavigatedFrom(e);
 		}
 
+
+		// Temporary navigation control
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			Frame frame = Window.Current.Content as Frame;

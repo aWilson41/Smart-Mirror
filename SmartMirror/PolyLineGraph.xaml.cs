@@ -37,9 +37,9 @@ namespace SmartMirror
 		int numDividersY = 0;
 
 		// Divider labels
-		Color labelDividerColor = Color.FromArgb(255, 255, 255, 255);
-		List<string> horzLabels = new List<string>();
-		List<string> vertLabels = new List<string>();
+		//Color labelDividerColor = Color.FromArgb(255, 255, 255, 255);
+		//List<string> horzLabels = new List<string>();
+		//List<string> vertLabels = new List<string>();
 
 		public PolyLineGraph() { InitializeComponent(); }
 
@@ -66,9 +66,9 @@ namespace SmartMirror
 		}
 		public void SetDividerColor(Color color) { dividerColor = color; }
 		public void SetDividerThickness(double thickness) { dividerThickness = thickness; }
-		public void AddHorzLabel(string str) { horzLabels.Add(str); }
-		public void AddVertLabel(string str) { vertLabels.Add(str); }
-		public void SetLabelDivderColor(Color color) { labelDividerColor = color; }
+		//public void AddHorzLabel(string str) { horzLabels.Add(str); }
+		//public void AddVertLabel(string str) { vertLabels.Add(str); }
+		//public void SetLabelDivderColor(Color color) { labelDividerColor = color; }
 
 		public void SetPoints(List<Point> points) { this.points = new List<Point>(points); }
 		public void AddPoint(Point pt) { points.Add(new Point(pt.X, pt.Y)); }
@@ -78,8 +78,8 @@ namespace SmartMirror
 		{
 			points.Clear();
 			labels.Clear();
-			horzLabels.Clear();
-			vertLabels.Clear();
+			//horzLabels.Clear();
+			//vertLabels.Clear();
 		}
 
 		// Updates the polyline representation to the specified points

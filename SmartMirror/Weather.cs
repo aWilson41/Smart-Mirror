@@ -6,7 +6,6 @@ using Windows.UI.Xaml;
 
 namespace SmartMirror
 {
-	// TODO: Rework the forecast functionality. Shouldn't be storing the data like this
 	static class Weather
 	{
 		// 12 hour forecast

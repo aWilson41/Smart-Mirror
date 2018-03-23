@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 
 namespace SmartMirror
 {

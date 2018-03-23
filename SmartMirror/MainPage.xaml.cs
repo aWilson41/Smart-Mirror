@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Collections.Generic;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
@@ -271,7 +270,7 @@ namespace SmartMirror
 		}
 
 
-		// Temporary
+		// Temporary navigation control
 		private void button_Click(object sender, RoutedEventArgs e)
 		{
 			Frame frame = Window.Current.Content as Frame;
