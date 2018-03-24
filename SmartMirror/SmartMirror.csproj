@@ -107,6 +107,7 @@
     <Compile Include="CalendarPage.xaml.cs">
       <DependentUpon>CalendarPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserAccount.cs" />
     <Compile Include="WeatherPage.xaml.cs">
       <DependentUpon>WeatherPage.xaml</DependentUpon>
     </Compile>
