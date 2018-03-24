@@ -1,14 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Collections.Generic;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Shapes;
+﻿using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
-using Windows.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
 
 namespace SmartMirror
 {
@@ -21,6 +14,7 @@ namespace SmartMirror
 			ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
 		}
 
+		// Temporary navigation control
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			Frame frame = Window.Current.Content as Frame;

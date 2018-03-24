@@ -6,7 +6,6 @@ using Windows.UI.Xaml;
 
 namespace SmartMirror
 {
-	// TODO: Rework the forecast functionality. Shouldn't be storing the data like this
 	static class Weather
 	{
         private static string zipcode = UserAccount.getSetting("zipcode").ToString();
@@ -25,6 +24,7 @@ namespace SmartMirror
 
 		// Current temp and conditions
 		private static int currTemp = 0;
+		private static int currPrecipChance = 0;
 		private static string forecastMessage = "";
 
 		private static string errorMessage = "";
@@ -34,8 +34,10 @@ namespace SmartMirror
 		public static int GetCurrTemp() { return currTemp; }
 		public static string GetForecastMsg() { return forecastMessage; }
 		public static string GetErrorMsg() { return errorMessage; }
-		public static List<int> GetForecast() { return hourlyTempList; }
-		public static List<int> GetPrecipitation() { return hourlyPrecipChance; }
+		public static List<int> GetHourlyForecast() { return hourlyTempList; }
+		public static List<int> GetHourlyPrecipitation() { return hourlyPrecipChance; }
+		public static List<int> GetDayForecast() { return dayTempList; }
+		public static List<int> GetDayPrecipitation() { return dayPrecipChance; }
 
 		static Weather()
 		{
@@ -52,7 +54,7 @@ namespace SmartMirror
 			currentConditionsTimer.Start();
 
 			DispatcherTimer daysForecastTimer = new DispatcherTimer();
-			daysForecastTimer.Tick += UpdateDaysForecast;
+			daysForecastTimer.Tick += UpdateTodaysForecast;
 			// Update the days forecast every 6 hours
 			daysForecastTimer.Interval = new TimeSpan(6, 0, 0);
 			daysForecastTimer.Start();
@@ -75,6 +77,7 @@ namespace SmartMirror
 				hourlyPrecipChance.Clear();
 
 				hourlyTempList.Add(currTemp);
+				hourlyPrecipChance.Add(currPrecipChance);
 				for (int hr = 0; hr < 12; hr++)
 				{
 					responseStr = responseStr.Substring(responseStr.IndexOf("temp") + 20);
@@ -127,7 +130,7 @@ namespace SmartMirror
 		}
 
 		// Updates the days (24hr) forecast (high/low)
-		public static void UpdateDaysForecast(object sender, object args)
+		public static void UpdateTodaysForecast(object sender, object args)
 		{
 			errorMessage = "";
 			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/" + zipcode + ".json");
@@ -148,6 +151,8 @@ namespace SmartMirror
 					highTemp = (int)Math.Round(Double.Parse(highTempStr.Substring(0, highTempStr.IndexOf('"'))));
 					string lowTempStr = highLowStr.Substring(highLowStr.IndexOf("low") + 24);
 					lowTemp = (int)Math.Round(Double.Parse(lowTempStr.Substring(0, lowTempStr.IndexOf('"'))));
+					string popStr = lowTempStr.Substring(lowTempStr.IndexOf("pop") + 5);
+					currPrecipChance = int.Parse(popStr.Substring(0, popStr.IndexOf(',')));
 				}
 			}
 			catch (Exception e)
@@ -161,10 +166,37 @@ namespace SmartMirror
 
 		//}
 
-		//public static void Update12DayForecast()
-		//{
+		public static void Update10DayForecast(object sender, object args)
+		{
+			errorMessage = "";
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast10day/lang:EN/q/75002.json");
 
-		//}
+			// Try to get the forecast from wunderground
+			try
+			{
+				WebResponse response = request.GetResponseAsync().Result;
+				Stream dataStream = response.GetResponseStream();
+				StreamReader reader = new StreamReader(dataStream);
+				string responseStr = reader.ReadToEnd();
+				dayTempList.Clear();
+				dayPrecipChance.Clear();
+
+				for (int hr = 0; hr < 10; hr++)
+				{
+					responseStr = responseStr.Substring(responseStr.IndexOf("epoch") + 20);
+					responseStr = responseStr.Substring(responseStr.IndexOf("high") + 25);
+					int temp = (int)Math.Round(Double.Parse(responseStr.Substring(0, responseStr.IndexOf('"'))));
+					dayTempList.Add(temp);
+					string popStr = responseStr.Substring(responseStr.IndexOf("pop") + 5);
+					int pop = int.Parse(popStr.Substring(0, popStr.IndexOf(',')));
+					dayPrecipChance.Add(pop);
+				}
+			}
+			catch (Exception e)
+			{
+				errorMessage = "Can't get hourly forecast";
+			}
+		}
 
 	}
 }

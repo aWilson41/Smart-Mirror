@@ -2,11 +2,11 @@
 using System.Globalization;
 using System.Collections.Generic;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -75,7 +75,7 @@ namespace SmartMirror
 		// Sets the weather forecast/timeline given the temperatures
 		public void Set12HrForecast(DateTime dateTime, List<int> tempForecast, List<int> precipForecast)
 		{
-			if (tempForecast.Count <= 0 || precipForecast.Count <= 0)
+			if (tempForecast.Count <= 0 || precipForecast.Count <= 0 || tempForecast.Count != precipForecast.Count)
 				return;
 
 			// Find the max and min temperature
@@ -94,38 +94,40 @@ namespace SmartMirror
 			// Ceil the max to the nearest 10s
 			int maxCeil = (max / 10 + 1) * 10;
 			// How many dividers we should put
-			int numOfDiv = (maxCeil - minFloor) / 10;
-			if (numOfDiv <= 0)
-				return;
+			int numOfDiv = (maxCeil - minFloor) / 10 - 1;
 
-			// We need a label for every divider and one for the beginning and end
+			WeatherGraph.SetBounds(0, minFloor, 12, maxCeil);
+			WeatherGraph.SetLineColor(Color.FromArgb(255, 135, 206, 235));
+			WeatherGraph.SetLabelColor(Color.FromArgb(255, 255, 255, 255));
+			WeatherGraph.SetLineThickness(8.0);
+			WeatherGraph.SetLabelSuffix("%");
+			WeatherGraph.SetFontSize(25.0);
+			WeatherGraph.SetNumberOfSubdivisions(20);
+			WeatherGraph.SetNumberOfDividers(0, numOfDiv);
+			WeatherGraph.Clear();
+			for (int i = 0; i < tempForecast.Count; i++)
+			{
+				WeatherGraph.AddPoint(new Point(i, tempForecast[i]));
+				WeatherGraph.AddLabel(precipForecast[i].ToString());
+			}
+			WeatherGraph.Update();
+
+			//// We need a label for every divider and one for the beginning and end
 			StartTempLabel.Text = maxCeil.ToString();
 
 			WeatherGraphLabelGroup.Children.Clear();
-			WeatherCanvas.Children.Clear();
 
 			// Start at 1 (3 divisions needs 2 dividers)
-			for (int i = 1; i < numOfDiv; i++)
+			for (int i = 1; i < numOfDiv + 1; i++)
 			{
-				// Place a divider
-				Rectangle rect = new Rectangle();
-				rect.Width = CopyRect.Width;
-				rect.Height = CopyRect.Height;
-				rect.Fill = new SolidColorBrush(Windows.UI.Colors.White);
-				Canvas.SetLeft(rect, 0);
-				Canvas.SetTop(rect, i * WeatherGraphBorder.Height / numOfDiv);
-				WeatherCanvas.Children.Add(rect);
-
 				// Place vertical temperature label
 				TextBlock label = new TextBlock();
-				label.Width = StartTempLabel.Width;
-				label.Height = StartTempLabel.Height;
 				label.Foreground = StartTempLabel.Foreground;
 				label.FontSize = StartTempLabel.FontSize;
 				label.Text = (maxCeil - i * 10).ToString();
 				label.FontFamily = StartTempLabel.FontFamily;
 				Canvas.SetLeft(label, Canvas.GetLeft(StartTempLabel));
-				Canvas.SetTop(label, Canvas.GetTop(StartTempLabel) + i * WeatherGraphBorder.Height / numOfDiv);
+				Canvas.SetTop(label, Canvas.GetTop(StartTempLabel) + i * WeatherGraphBorder.Height / (numOfDiv + 1));
 				WeatherGraphLabelGroup.Children.Add(label);
 			}
 
@@ -150,56 +152,6 @@ namespace SmartMirror
 				}
 
 				label.Text = hr.ToString() + ttStr;
-			}
-
-			// Create the weather points and precip chance labels
-			List<Point> pts = new List<Point>();
-			for (int i = 0; i < 12; i++)
-			{
-				double x = i * WeatherGraphBorder.Width / 11.0;
-				double y = WeatherGraphBorder.Height - (tempForecast[i] - minFloor) * WeatherGraphBorder.Height / (maxCeil - minFloor);
-				pts.Add(new Point(x, y));
-
-				Ellipse circle = new Ellipse();
-				circle.Fill = new SolidColorBrush(Windows.UI.Colors.LightSteelBlue);
-				circle.Width = 16;
-				circle.Height = 16;
-				Canvas.SetLeft(circle, x - 8);
-				Canvas.SetTop(circle, y - 8);
-				WeatherCanvas.Children.Add(circle);
-
-				TextBlock popText = new TextBlock();
-				popText.Text = precipForecast[i].ToString() + "%";
-				popText.FontFamily = new FontFamily("Assets/AGENCYB.TTF#Agency FB");
-				popText.FontSize = 20.0;
-				popText.Foreground = new SolidColorBrush(Windows.UI.Colors.White);
-				Canvas.SetLeft(popText, x);
-				Canvas.SetTop(popText, y - 40);
-				WeatherCanvas.Children.Add(popText);
-			}
-
-			// Create a polyline
-			Polyline pLine = new Polyline();
-			pLine.Stroke = new SolidColorBrush(Windows.UI.Colors.LightBlue);
-			pLine.StrokeThickness = 8;
-			WeatherCanvas.Children.Add(pLine);
-			// 20 samples along the curve
-			for (int j = 0; j < 20; j++)
-			{
-				pLine.Points.Add(catmullRom(pts[0], pts[0], pts[1], pts[2], j / 20f));
-			}
-			for (int i = 0; i < 8; i++)
-			{
-				// 20 samples along the curve
-				for (int j = 0; j < 20; j++)
-				{
-					pLine.Points.Add(catmullRom(pts[i], pts[i + 1], pts[i + 2], pts[i + 3], j / 20f));
-				}
-			}
-			// 20 samples along the curve
-			for (int j = 0; j < 20; j++)
-			{
-				pLine.Points.Add(catmullRom(pts[9], pts[10], pts[11], pts[11], j / 20f));
 			}
 		}
 
@@ -265,7 +217,7 @@ namespace SmartMirror
 				// Add error dialog
 				return;
 			}
-			Set12HrForecast(currDateTime, Weather.GetForecast(), Weather.GetPrecipitation());
+			Set12HrForecast(currDateTime, Weather.GetHourlyForecast(), Weather.GetHourlyPrecipitation());
 		}
 
 		private void UpdateCurrentConditions()
@@ -284,16 +236,6 @@ namespace SmartMirror
 				return;
 			}
 			SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
-		}
-
-		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
-		// class but why make a mathehelper class with one function in it)
-		static Point catmullRom(Point p0, Point p1, Point p2, Point p3, float t)
-		{
-			float t2 = t * t;
-			float t3 = t2 * t;
-			return new Point(0.5f * ((2.0f * p1.X) + (-p0.X + p2.X) * t + (2.0f * p0.X - 5.0f * p1.X + 4.0f * p2.X - p3.X) * t2 + (-p0.X + 3.0f * p1.X - 3.0f * p2.X + p3.X) * t3),
-				0.5f * ((2.0f * p1.Y) + (-p0.Y + p2.Y) * t + (2.0f * p0.Y - 5.0f * p1.Y + 4.0f * p2.Y - p3.Y) * t2 + (-p0.Y + 3.0f * p1.Y - 3.0f * p2.Y + p3.Y) * t3));
 		}
 
 
@@ -328,7 +270,7 @@ namespace SmartMirror
 		}
 
 
-		// Temporary
+		// Temporary navigation control
 		private void button_Click(object sender, RoutedEventArgs e)
 		{
 			Frame frame = Window.Current.Content as Frame;

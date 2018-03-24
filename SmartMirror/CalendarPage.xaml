@@ -6,13 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-	<Canvas x:Name="MainCanvas" Background="Black">
-		<Canvas x:Name="SubCanvas">
-			<Canvas.RenderTransform>
-				<CompositeTransform Rotation="-90" TranslateX="500" TranslateY="770"/>
-			</Canvas.RenderTransform>
-			<Button x:Name="Button" Content="Too Main Page" Canvas.Left="-16" Canvas.Top="395" Background="#33000000" Foreground="White" Height="131" Width="550" FontSize="72" Click="Button_Click" BorderBrush="White"/>
-		</Canvas>
-	</Canvas>
+	<StackPanel Margin="0,0,835,-840" UseLayoutRounding="False" d:LayoutRounding="Auto" Background="Black">
+		<StackPanel.RenderTransform>
+			<CompositeTransform Rotation="-90" TranslateY="1080"/>
+		</StackPanel.RenderTransform>
+		<Button x:Name="Button" Content="Too Main Page" Background="#33000000" Foreground="White" Height="77" Width="289" FontSize="36" Click="Button_Click" BorderBrush="White" HorizontalAlignment="Center"/>
+		<local:Calendar x:Name="Calendar" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	</StackPanel>
 </Page>
