@@ -110,6 +110,7 @@
     <Compile Include="CalendarPage.xaml.cs">
       <DependentUpon>CalendarPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserAccount.cs" />
     <Compile Include="PolyLineGraph.xaml.cs">
       <DependentUpon>PolyLineGraph.xaml</DependentUpon>
     </Compile>
