@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SmartMirror
 {
-	sealed partial class App : Application
+    sealed partial class App : Application
 	{
 		Frame frame;
 		GPIOButtonListener buttonListener = new GPIOButtonListener();
