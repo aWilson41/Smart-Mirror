@@ -26,17 +26,24 @@ namespace SmartMirrorTests
 				precipChance = Weather.GetHourlyPrecipitation();
 			}).AsTask().Wait();
 
-			// There should be exactly 12 entires in the hourly forecast
+			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
+			Assert.AreNotEqual(14, hourlyForecast.Count);
 			Assert.AreEqual(12, hourlyForecast.Count);
+			Assert.AreNotEqual(9, hourlyForecast.Count);
+
+			Assert.AreNotEqual(14, precipChance.Count);
 			Assert.AreEqual(12, precipChance.Count);
+			Assert.AreNotEqual(9, precipChance.Count);
 
 			// Every forecast temperature can be any integer
 
 			// Every precipitation must be a precentage [0,100]
 			for (int i = 0; i < precipChance.Count; i++)
 			{
-				Assert.IsTrue(precipChance[i] <= 100);
-				Assert.IsTrue(precipChance[i] >= 0);
+				// Test in range [0, 100] and out of the range
+				Assert.IsTrue(precipChance[i] <= 100 && precipChance[i] >= 0);
+				Assert.IsFalse(precipChance[i] > 100);
+				Assert.IsFalse(precipChance[i] < 0);
 			}
 		}
 
@@ -72,17 +79,24 @@ namespace SmartMirrorTests
 				precipChance = Weather.GetDayPrecipitation();
 			}).AsTask().Wait();
 
-			// There should be exactly 12 entires in the daily forecast
+			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
+			Assert.AreNotEqual(14, dailyForecast.Count);
 			Assert.AreEqual(10, dailyForecast.Count);
+			Assert.AreNotEqual(9, dailyForecast.Count);
+
+			Assert.AreNotEqual(14, precipChance.Count);
 			Assert.AreEqual(10, precipChance.Count);
+			Assert.AreNotEqual(9, precipChance.Count);
 
 			// Every forecast temperature can be any integer
 
 			// Every precipitation must be a precentage [0,100]
 			for (int i = 0; i < precipChance.Count; i++)
 			{
-				Assert.IsTrue(precipChance[i] <= 100);
-				Assert.IsTrue(precipChance[i] >= 0);
+				// Test in range [0, 100] and out of the range
+				Assert.IsTrue(precipChance[i] <= 100 && precipChance[i] >= 0);
+				Assert.IsFalse(precipChance[i] > 100);
+				Assert.IsFalse(precipChance[i] < 0);
 			}
 		}
     }
