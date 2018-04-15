@@ -9,3 +9,6 @@
 /SmartMirror/project.lock.json
 /SmartMirror/SmartMirror.csproj.user
 /SmartMirror/SmartMirror_TemporaryKey.pfx
+/SmartMirrorTests/obj
+/SmartMirrorTests/SmartMirrorTests_TemporaryKey.pfx
+/SmartMirrorTests/bin/x86/Release

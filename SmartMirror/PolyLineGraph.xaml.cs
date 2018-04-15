@@ -104,6 +104,7 @@ namespace SmartMirror
 			UpdateLabels();
 		}
 
+		// Lines that make the graph
 		private void UpdateDividers()
 		{
 			// Add the background dividers
@@ -131,6 +132,7 @@ namespace SmartMirror
 			}
 		}
 
+		// Poly line plotted on the graph
 		private void UpdatePolyLine()
 		{
 			// Create a new polyline
@@ -151,6 +153,7 @@ namespace SmartMirror
 			}
 		}
 
+		// Points on the graph
 		private void UpdatePoints()
 		{
 			// Add the points
@@ -171,6 +174,7 @@ namespace SmartMirror
 			}
 		}
 
+		// Labels around the graph
 		private void UpdateLabels()
 		{
 			// Add the labels

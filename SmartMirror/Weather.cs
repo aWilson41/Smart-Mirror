@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 
 namespace SmartMirror
 {
-	static class Weather
+	public static class Weather
 	{
 		// 12 hour forecast
 		private static List<int> hourlyTempList = new List<int>();
@@ -23,14 +23,14 @@ namespace SmartMirror
 		// Current temp and conditions
 		private static int currTemp = 0;
 		private static int currPrecipChance = 0;
-		private static string forecastMessage = "";
+		private static string conditionsMessage = "";
 
 		private static string errorMessage = "";
 
 		public static int GetHighTemp() { return highTemp; }
 		public static int GetLowTemp() { return lowTemp; }
 		public static int GetCurrTemp() { return currTemp; }
-		public static string GetForecastMsg() { return forecastMessage; }
+		public static string GetConditionsMsg() { return conditionsMessage; }
 		public static string GetErrorMsg() { return errorMessage; }
 		public static List<int> GetHourlyForecast() { return hourlyTempList; }
 		public static List<int> GetHourlyPrecipitation() { return hourlyPrecipChance; }
@@ -76,14 +76,14 @@ namespace SmartMirror
 
 				hourlyTempList.Add(currTemp);
 				hourlyPrecipChance.Add(currPrecipChance);
-				for (int hr = 0; hr < 12; hr++)
+				for (int hr = 0; hr < 11; hr++)
 				{
 					responseStr = responseStr.Substring(responseStr.IndexOf("temp") + 20);
 					int temp = int.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
 					hourlyTempList.Add(temp);
 
 					responseStr = responseStr.Substring(responseStr.IndexOf("pop") + 7);
-					
+
 					int pop = (int)Double.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
 					hourlyPrecipChance.Add(pop);
 				}
@@ -117,8 +117,8 @@ namespace SmartMirror
 					currTemp = (int)Math.Round(temp);
 
 					// Acquire and parse the forecast message
-					forecastMessage = responseStr.Substring(responseStr.IndexOf("\"weather\"") + 11);
-					forecastMessage = forecastMessage.Substring(0, forecastMessage.IndexOf('\"'));
+					conditionsMessage = responseStr.Substring(responseStr.IndexOf("\"weather\"") + 11);
+					conditionsMessage = conditionsMessage.Substring(0, conditionsMessage.IndexOf('\"'));
 				}
 			}
 			catch (Exception e)

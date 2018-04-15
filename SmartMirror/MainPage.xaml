@@ -49,12 +49,9 @@
 			</Canvas>
 
 			<Border x:Name="WeatherGraphBorder" BorderBrush="White" BorderThickness="0,2,0,2" Width="956" Height="340" Canvas.Left="-220" Canvas.Top="760">
-				<!--<Canvas x:Name="WeatherCanvas">
-					<Rectangle x:Name="CopyRect" Fill="#FFF4F4F5" Height="2" Width="952" Canvas.Top="118" Canvas.Left="0" Stroke="White" Visibility="Collapsed"/>
-				</Canvas>-->
 				<local:PolyLineGraph x:Name="WeatherGraph" Width="956" Height="340"/>
 			</Border>
-			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White"/>
+			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White" Visibility="Collapsed"/>
 		</Canvas>
 	</Canvas>
 </Page>
