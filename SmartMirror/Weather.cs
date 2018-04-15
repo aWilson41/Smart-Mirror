@@ -8,6 +8,8 @@ namespace SmartMirror
 {
 	public static class Weather
 	{
+        private static string zipcode = UserAccount.getSetting("zipcode").ToString();
+
 		// 12 hour forecast
 		private static List<int> hourlyTempList = new List<int>();
 		private static List<int> hourlyPrecipChance = new List<int>();
@@ -39,7 +41,7 @@ namespace SmartMirror
 
 		static Weather()
 		{
-			DispatcherTimer hourlyForecastTimer = new DispatcherTimer();
+            DispatcherTimer hourlyForecastTimer = new DispatcherTimer();
 			hourlyForecastTimer.Tick += UpdateHourlyForecast;
 			// Update the 12hr forecast every 30 minutes
 			hourlyForecastTimer.Interval = new TimeSpan(0, 30, 0);
@@ -62,7 +64,7 @@ namespace SmartMirror
 		static public void UpdateHourlyForecast(object sender, object args)
 		{
 			errorMessage = "";
-			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/" + zipcode + ".json");
 
 			// Try to get the forecast from wunderground
 			try
@@ -98,7 +100,7 @@ namespace SmartMirror
 		public static void UpdateCurrentConditions(object sender, object args)
 		{
 			errorMessage = "";
-			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/75002.json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/" + zipcode + ".json");
 
 			// Try to get the weather from the wundergrund
 			try
@@ -131,7 +133,7 @@ namespace SmartMirror
 		public static void UpdateTodaysForecast(object sender, object args)
 		{
 			errorMessage = "";
-			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/75002.json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/" + zipcode + ".json");
 
 			// Try to get the forecast from the wunderground
 			try

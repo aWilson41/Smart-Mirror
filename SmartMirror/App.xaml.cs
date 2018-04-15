@@ -12,7 +12,7 @@ namespace SmartMirror
 		Frame frame;
 		GPIOButtonListener buttonListener = new GPIOButtonListener();
 		int currPage = 0;
-        //HttpServer server;
+        HttpServer server;
 
 		public App()
 		{
@@ -25,7 +25,14 @@ namespace SmartMirror
 			buttonListener.ButtonPressed += CyclePage;
 
             // Initialize web server
-            //server = new HttpServer(8090);
+            server = new HttpServer(8090);
+
+            // Set default settings
+            Object zipcode = UserAccount.getSetting("zipcode");
+            if (zipcode == null)
+            {
+                UserAccount.saveSetting("zipcode", "94105");
+            }
 		}
 
 		// Cycles through navigation
