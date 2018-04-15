@@ -98,61 +98,24 @@ namespace SmartMirror
 
 			WeatherGraph.SetBounds(0, minFloor, 11, maxCeil);
 			WeatherGraph.SetLineColor(Color.FromArgb(255, 135, 206, 235));
-			WeatherGraph.SetLabelColor(Color.FromArgb(255, 255, 255, 255));
 			WeatherGraph.SetLineThickness(8.0);
 			WeatherGraph.SetLabelSuffix("%");
-			WeatherGraph.SetFontSize(25.0);
+			WeatherGraph.SetVertLabelSuffix(((char)176).ToString());
+			WeatherGraph.SetPointFontSize(25.0);
 			WeatherGraph.SetNumberOfSubdivisions(20);
-			WeatherGraph.SetNumberOfDividers(0, numOfDiv);
+			WeatherGraph.SetNumberOfDividers(10, numOfDiv);
+			WeatherGraph.SetDividerVisibility(false, true);
 			WeatherGraph.Clear();
 			for (int i = 0; i < tempForecast.Count; i++)
 			{
 				WeatherGraph.AddPoint(new Point(i, tempForecast[i]));
 				WeatherGraph.AddLabel(precipForecast[i].ToString());
 			}
+			for (int i = dateTime.Hour; i < dateTime.Hour + 12; i++)
+			{
+				WeatherGraph.AddHorzLabel(new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, i, 0, 0).ToString("h tt"));
+			}
 			WeatherGraph.Update();
-
-			//// We need a label for every divider and one for the beginning and end
-			StartTempLabel.Text = maxCeil.ToString();
-
-			WeatherGraphLabelGroup.Children.Clear();
-
-			// Start at 1 (3 divisions needs 2 dividers)
-			for (int i = 1; i < numOfDiv + 1; i++)
-			{
-				// Place vertical temperature label
-				TextBlock label = new TextBlock();
-				label.Foreground = StartTempLabel.Foreground;
-				label.FontSize = StartTempLabel.FontSize;
-				label.Text = (maxCeil - i * 10).ToString();
-				label.FontFamily = StartTempLabel.FontFamily;
-				Canvas.SetLeft(label, Canvas.GetLeft(StartTempLabel));
-				Canvas.SetTop(label, Canvas.GetTop(StartTempLabel) + i * WeatherGraphBorder.Height / (numOfDiv + 1));
-				WeatherGraphLabelGroup.Children.Add(label);
-			}
-
-			EndTempLabel.Text = minFloor.ToString();
-
-			// Place horizontal time labels
-			for (int i = 0; i < WeatherTimeLabel.Children.Count; i++)
-			{
-				TextBlock label = WeatherTimeLabel.Children[i] as TextBlock;
-				int hr = dateTime.Hour + i;
-				// Adding i could cause the value to overflow
-				if (hr > 24)
-					hr -= 24;
-
-				// Convert anything about 12 to 1-12
-				string ttStr = "am";
-				if (hr > 12)
-				{
-					hr -= 12;
-					if (hr != 12)
-						ttStr = "pm";
-				}
-
-				label.Text = hr.ToString() + ttStr;
-			}
 		}
 
 		// Given current date/time, updates the hour hand to reflect the hour

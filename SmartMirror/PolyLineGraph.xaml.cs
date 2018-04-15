@@ -25,21 +25,27 @@ namespace SmartMirror
 		int subdivision = 0;
 
 		// Labels
-		List<string> labels = new List<string>();
-		Color labelColor = Color.FromArgb(255, 255, 255, 255);
-		string labelSuffix = "";
-		double fontSize = 20.0;
+		List<string> pointLabels = new List<string>();
+		Color pointLabelColor = Color.FromArgb(255, 255, 255, 255);
+		string pointLabelSuffix = "";
+		double pointLabelFontSize = 20.0;
 
 		// Dividers
 		Color dividerColor = Color.FromArgb(255, 255, 255, 255);
 		double dividerThickness = 1.0;
 		int numDividersX = 0;
 		int numDividersY = 0;
+		bool horzDividersVisible = true;
+		bool vertDividersVisible = true;
 
 		// Divider labels
-		//Color labelDividerColor = Color.FromArgb(255, 255, 255, 255);
-		//List<string> horzLabels = new List<string>();
-		//List<string> vertLabels = new List<string>();
+		Color labelColor = Color.FromArgb(255, 255, 255, 255);
+		List<string> horzLabels = new List<string>();
+		double horzLabelFontSize = 30.0;
+		string horzLabelSuffix = "";
+		List<string> vertLabels = new List<string>();
+		double vertLabelFontSize = 40.0;
+		string vertLabelSuffix = "";
 
 		public PolyLineGraph() { InitializeComponent(); }
 
@@ -54,11 +60,11 @@ namespace SmartMirror
 		public void SetLineThickness(double thickness) { lineThickness = thickness; }
 		public void SetLineColor(Color color) { lineColor = color; }
 		public void SetPointColor(Color color) { pointColor = color; }
-		public void SetLabelColor(Color color) { labelColor = color; }
+		public void SetPointLabelColor(Color color) { pointLabelColor = color; }
 		public void SetNumberOfSubdivisions(int subdiv) { subdivision = subdiv; }
 		public void SetShowPoints(bool val) { showPoints = val; }
-		public void SetLabelSuffix(string str) { labelSuffix = str; }
-		public void SetFontSize(double fontSize) { this.fontSize = fontSize; }
+		public void SetLabelSuffix(string str) { pointLabelSuffix = str; }
+		public void SetPointFontSize(double fontSize) { pointLabelFontSize = fontSize; }
 		public void SetNumberOfDividers(int x, int y)
 		{
 			numDividersX = x;
@@ -66,20 +72,26 @@ namespace SmartMirror
 		}
 		public void SetDividerColor(Color color) { dividerColor = color; }
 		public void SetDividerThickness(double thickness) { dividerThickness = thickness; }
-		//public void AddHorzLabel(string str) { horzLabels.Add(str); }
-		//public void AddVertLabel(string str) { vertLabels.Add(str); }
-		//public void SetLabelDivderColor(Color color) { labelDividerColor = color; }
+		public void AddHorzLabel(string str) { horzLabels.Add(str); }
+		public void AddVertLabel(string str) { vertLabels.Add(str); }
+
+		public void SetAxisLabelColor(Color color) { labelColor = color; }
+		public void SetVertLabelFontSize(double size) { vertLabelFontSize = size; }
+		public void SetHorzLabelFontSize(double size) { horzLabelFontSize = size; }
+		public void SetHorzLabelSuffix(string suffix) { horzLabelSuffix = suffix; }
+		public void SetVertLabelSuffix(string suffix) { vertLabelSuffix = suffix; }
+		public void SetDividerVisibility(bool horz, bool vert) { horzDividersVisible = horz; vertDividersVisible = vert; }
 
 		public void SetPoints(List<Point> points) { this.points = new List<Point>(points); }
 		public void AddPoint(Point pt) { points.Add(new Point(pt.X, pt.Y)); }
-		public void SetLabels(List<string> labels) { this.labels = new List<string>(labels); }
-		public void AddLabel(string label) { labels.Add(label); }
+		public void SetPointLabels(List<string> pointLabels) { this.pointLabels = new List<string>(pointLabels); }
+		public void AddLabel(string pointLabel) { pointLabels.Add(pointLabel); }
 		public void Clear()
 		{
 			points.Clear();
-			labels.Clear();
-			//horzLabels.Clear();
-			//vertLabels.Clear();
+			pointLabels.Clear();
+			horzLabels.Clear();
+			vertLabels.Clear();
 		}
 
 		// Updates the polyline representation to the specified points
@@ -95,11 +107,12 @@ namespace SmartMirror
 			// Calculate the proper coordinates
 			for (int i = 0; i < points.Count; i++)
 			{
-				points[i] = new Point((points[i].X - start.X) * Width / width,
-					Height - (points[i].Y - start.Y) * Height / height);
+				points[i] = new Point((points[i].X - start.X) * GraphCanvas.Width / width,
+					GraphCanvas.Height - (points[i].Y - start.Y) * GraphCanvas.Height / height);
 			}
 
 			// Remove everything from the canvas
+			GraphCanvas.Children.Clear();
 			MainCanvas.Children.Clear();
 
 			UpdateDividers();
@@ -111,28 +124,72 @@ namespace SmartMirror
 		// Lines that make the graph
 		private void UpdateDividers()
 		{
-			// Add the background dividers
-			double divXSize = Width / (numDividersX + 1);
-			for (int i = 1; i < numDividersX + 1; i++)
+			// Add the background lines dividers
+			double divXSize = GraphCanvas.Width / (numDividersX + 1);
+			if (horzDividersVisible)
 			{
-				Rectangle rect = new Rectangle();
-				rect.Width = dividerThickness;
-				rect.Height = Height;
-				rect.Fill = new SolidColorBrush(dividerColor);
-				Canvas.SetLeft(rect, i * divXSize);
-				Canvas.SetTop(rect, 0);
-				MainCanvas.Children.Add(rect);
+				for (int i = 1; i < numDividersX + 1; i++)
+				{
+					Rectangle rect = new Rectangle();
+					rect.Width = dividerThickness;
+					rect.Height = GraphCanvas.Height;
+					rect.Fill = new SolidColorBrush(dividerColor);
+					Canvas.SetLeft(rect, i * divXSize);
+					Canvas.SetTop(rect, 0);
+					GraphCanvas.Children.Add(rect);
+				}
 			}
-			double divYSize = Height / (numDividersY + 1);
-			for (int i = 1; i < numDividersY + 1; i++)
+			double divYSize = GraphCanvas.Height / (numDividersY + 1);
+			if (vertDividersVisible)
 			{
-				Rectangle rect = new Rectangle();
-				rect.Width = Width;
-				rect.Height = dividerThickness;
-				rect.Fill = new SolidColorBrush(dividerColor);
-				Canvas.SetLeft(rect, 0);
-				Canvas.SetTop(rect, Height - i * divYSize);
-				MainCanvas.Children.Add(rect);
+				for (int i = 1; i < numDividersY + 1; i++)
+				{
+					Rectangle rect = new Rectangle();
+					rect.Width = GraphCanvas.Width;
+					rect.Height = dividerThickness;
+					rect.Fill = new SolidColorBrush(dividerColor);
+					Canvas.SetLeft(rect, 0);
+					Canvas.SetTop(rect, GraphCanvas.Height - i * divYSize);
+					GraphCanvas.Children.Add(rect);
+				}
+			}
+			
+			// Add text labels on divider positions
+			double rangeY = (end.Y - start.Y) / (numDividersY + 1);
+			for (int i = 0; i < numDividersY + 2; i++)
+			{
+				// Add a vertical axis label
+				TextBlock label = new TextBlock();
+				label.Foreground = new SolidColorBrush(labelColor);
+				label.FontSize = vertLabelFontSize;
+				string str = getVertLabelStr(i);
+				if (str == "")
+					label.Text = (start.Y + i * rangeY).ToString() + vertLabelSuffix;
+				else
+					label.Text = str;
+				label.FontFamily = new FontFamily("Assets/AGENCYB.TTF#Agency FB");
+				label.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+				Canvas.SetLeft(label, -label.DesiredSize.Width - 3);
+				Canvas.SetTop(label, GraphCanvas.Height - i * divYSize - label.DesiredSize.Height * 0.45);
+				MainCanvas.Children.Add(label);
+			}
+			double rangeX = (end.X - start.X) / (numDividersX + 1);
+			for (int i = 0; i < numDividersX + 2; i++)
+			{
+				// Add a horizontal axis label
+				TextBlock label = new TextBlock();
+				label.Foreground = new SolidColorBrush(labelColor);
+				label.FontSize = horzLabelFontSize;
+				string str = getHorzLabelStr(i);
+				if (str == "")
+					label.Text = (start.X + i * rangeX).ToString() + horzLabelSuffix;
+				else
+					label.Text = str;
+				label.FontFamily = new FontFamily("Assets/AGENCYB.TTF#Agency FB");
+				label.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+				Canvas.SetLeft(label, i * divXSize - label.DesiredSize.Width * 0.45);
+				Canvas.SetTop(label, WeatherGraphBorder.Height + label.DesiredSize.Height * 0.7);
+				MainCanvas.Children.Add(label);
 			}
 		}
 
@@ -143,7 +200,7 @@ namespace SmartMirror
 			polyLine = new Polyline();
 			polyLine.Stroke = new SolidColorBrush(lineColor);
 			polyLine.StrokeThickness = lineThickness;
-			MainCanvas.Children.Add(polyLine);
+			GraphCanvas.Children.Add(polyLine);
 			if (subdivision == 0)
 				AddRange(polyLine.Points, points);
 			else
@@ -173,7 +230,7 @@ namespace SmartMirror
 					circle.Height = d;
 					Canvas.SetLeft(circle, points[i].X - r);
 					Canvas.SetTop(circle, points[i].Y - r);
-					MainCanvas.Children.Add(circle);
+					GraphCanvas.Children.Add(circle);
 				}
 			}
 		}
@@ -182,20 +239,36 @@ namespace SmartMirror
 		private void UpdateLabels()
 		{
 			// Add the labels
-			if (labels.Count == points.Count)
+			if (pointLabels.Count == points.Count)
 			{
 				for (int i = 0; i < points.Count; i++)
 				{
 					TextBlock label = new TextBlock();
 					label.Foreground = new SolidColorBrush(labelColor);
-					label.FontSize = fontSize;
-					label.Text = labels[i] + labelSuffix;
+					label.FontSize = pointLabelFontSize;
+					label.Text = pointLabels[i] + pointLabelSuffix;
 					label.FontFamily = new FontFamily("Assets/AGENCYB.TTF#Agency FB");
 					Canvas.SetLeft(label, points[i].X);
 					Canvas.SetTop(label, points[i].Y);
-					MainCanvas.Children.Add(label);
+					GraphCanvas.Children.Add(label);
 				}
 			}
+		}
+
+
+		private string getHorzLabelStr(int i)
+		{
+			if (horzLabels.Count > 0 && i < horzLabels.Count)
+				return horzLabels[i] + horzLabelSuffix;
+			else
+				return "";
+		}
+		private string getVertLabelStr(int i)
+		{
+			if (vertLabels.Count > 0 && i < vertLabels.Count)
+				return vertLabels[i] + vertLabelSuffix;
+			else
+				return "";
 		}
 
 
@@ -206,6 +279,7 @@ namespace SmartMirror
 				collection.Add(cur);
 			}
 		}
+
 		// Creates a set of n (divisions) between p1 and p2. Using p0 and p3 as well for the curve.
 		public static Point[] CatmullRomSubdiv(Point p0, Point p1, Point p2, Point p3, int divisions)
 		{
@@ -216,6 +290,7 @@ namespace SmartMirror
 			}
 			return pts;
 		}
+
 		// Catmull rom for weather curves (could possibly go in a separate "mathhelper" 
 		// class but why make a mathehelper class with one function in it)
 		public static Point CatmullRom(Point p0, Point p1, Point p2, Point p3, float t)

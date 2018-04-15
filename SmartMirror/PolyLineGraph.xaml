@@ -6,5 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-	<Canvas x:Name="MainCanvas"/>
+	<Canvas Width="1006" Height="390">
+		<Canvas x:Name="MainCanvas" Width="906" Height="290" Margin="50,50,0,0"/>
+		<Border x:Name="WeatherGraphBorder" BorderBrush="White" BorderThickness="1,2,1,2" Width="906" Height="290" Margin="50,50,0,0">
+			<Canvas x:Name="GraphCanvas" Width="906" Height="290"/>
+		</Border>
+	</Canvas>
 </UserControl>

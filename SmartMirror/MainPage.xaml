@@ -29,29 +29,8 @@
 			<Rectangle x:Name="TickLeft" Fill="White" HorizontalAlignment="Left" Height="10" Margin="-250,190,0,0" Stroke="White" VerticalAlignment="Top" Width="20" RadiusX="5" RadiusY="5"/>
 			<Rectangle x:Name="TickRight" Fill="White" HorizontalAlignment="Left" Height="10" Margin="650,190,0,0" Stroke="White" VerticalAlignment="Top" Width="20" RadiusX="5" RadiusY="5"/>
 
-			<TextBlock x:Name="StartTempLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="A1" VerticalAlignment="Top" Foreground="White" FontSize="40" Width="48" FontWeight="Bold" Canvas.Left="-266" Canvas.Top="735" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-			<Canvas x:Name="WeatherGraphLabelGroup"/>
-			<TextBlock x:Name="EndTempLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="A2" VerticalAlignment="Top" Foreground="White" FontSize="40" Width="48" FontWeight="Bold" Canvas.Left="-266" Canvas.Top="1080" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-
-			<Canvas x:Name="WeatherTimeLabel">
-				<TextBlock x:Name="TimeLabel1" HorizontalAlignment="Left" TextWrapping="Wrap" Text="1am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="-228" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="2am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="-142.5" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel3" HorizontalAlignment="Left" TextWrapping="Wrap" Text="3am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="-57.09" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel4" HorizontalAlignment="Left" TextWrapping="Wrap" Text="4am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="28.36" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel5" HorizontalAlignment="Left" TextWrapping="Wrap" Text="5am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="113.82" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel6" HorizontalAlignment="Left" TextWrapping="Wrap" Text="6am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="199.27" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel7" HorizontalAlignment="Left" TextWrapping="Wrap" Text="7am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="284.73" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel8" HorizontalAlignment="Left" TextWrapping="Wrap" Text="8am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="370.18" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel9" HorizontalAlignment="Left" TextWrapping="Wrap" Text="9am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="455.64" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel10" HorizontalAlignment="Left" TextWrapping="Wrap" Text="10am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="541.09" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel11" HorizontalAlignment="Left" TextWrapping="Wrap" Text="11am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="626.55" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-				<TextBlock x:Name="TimeLabel12" HorizontalAlignment="Left" TextWrapping="Wrap" Text="12am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="701" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
-			</Canvas>
-
-			<Border x:Name="WeatherGraphBorder" BorderBrush="White" BorderThickness="1,2,1,2" Width="956" Height="340" Canvas.Left="-220" Canvas.Top="760">
-				<local:PolyLineGraph x:Name="WeatherGraph" Width="956" Height="340"/>
-			</Border>
-			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White" Visibility="Collapsed"/>
+			<local:PolyLineGraph x:Name="WeatherGraph" Width="1006" Height="390" Canvas.Left="-245" Canvas.Top="750"/>
+			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White" Visibility="Visible"/>
 		</Canvas>
 	</Canvas>
 </Page>
