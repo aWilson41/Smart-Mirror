@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -16,7 +17,6 @@ namespace SmartMirror
     {
         private const uint bufferSize = 4096;
         private StreamSocketListener listener;
-        private const string googleMapsKey = "AIzaSyCf7aTd-ZPp6eEKeLNRIKgKPOj0oBMCd2M";
 
         public HttpServer(int port)
         {
@@ -83,6 +83,8 @@ namespace SmartMirror
             {
                 string value = setting.Split('=')[1];
                 setting = setting.Split('?')[0];
+                System.Diagnostics.Debug.Write(setting);
+                System.Diagnostics.Debug.Write(value);
                 return await serializeResult(setting, UserAccount.saveSetting(setting, value).ToString());
             }
             return "";
@@ -92,46 +94,12 @@ namespace SmartMirror
         {
             if (setting == "zipcode")
             {
-                HttpClient httpClient = new HttpClient();
-                var headers = httpClient.DefaultRequestHeaders;
-                Uri requestUri = new Uri("https://maps.googleapis.com/maps/api/geocode/json?address=" + value + "&key=" + googleMapsKey);
-                HttpResponseMessage response = new HttpResponseMessage();
-                string body = "";
+                return await GoogleAPIAdapter.zipcode(value);
+            }
 
-                try
-                {
-                    response = await httpClient.GetAsync(requestUri);
-                    response.EnsureSuccessStatusCode();
-                    body = await response.Content.ReadAsStringAsync();
-                }
-                catch (Exception e)
-                {
-                    body = "Error: " + e.HResult.ToString("X") + " Message: " + e.Message;
-                }
-
-                JsonObject obj = JsonValue.Parse(body).GetObject();
-                JsonObject j = obj.GetNamedArray("results").GetObjectAt(0);
-                double lat = j.GetNamedObject("geometry").GetNamedObject("location").GetNamedNumber("lat");
-                double lng = j.GetNamedObject("geometry").GetNamedObject("location").GetNamedNumber("lng");
-                string locality = "";
-                JsonArray address = j.GetNamedArray("address_components");
-                foreach (var comp in address)
-                {
-                    JsonArray types = comp.GetObject().GetNamedArray("types");
-                    foreach (var type in types)
-                    {
-                        if (type.GetString() == "locality")
-                        {
-                            locality = comp.GetObject().GetNamedString("long_name");
-                        }
-                    }
-                }
-
-                JsonObject zipResult = new JsonObject();
-                zipResult.SetNamedValue("locality", JsonValue.CreateStringValue(locality));
-                zipResult.SetNamedValue("lat", JsonValue.CreateNumberValue(lat));
-                zipResult.SetNamedValue("lng", JsonValue.CreateNumberValue(lng));
-                return zipResult.ToString();
+            if (setting == "google")
+            {
+                GoogleAPIAdapter.authorize(value);
             }
 
 
