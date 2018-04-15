@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -70,10 +71,18 @@ namespace SmartMirror
 
 			DispatcherTimer daysForecastTimer = new DispatcherTimer();
 			daysForecastTimer.Tick += Update;
-			// Update the calendar every 12 hours
-			daysForecastTimer.Interval = new TimeSpan(12, 0, 0);
-			daysForecastTimer.Start();
-		}
+            // Update the calendar every 12 hours
+            daysForecastTimer.Interval = new TimeSpan(12, 0, 0);
+            daysForecastTimer.Start();
+
+            GetCalendarsAndEvents();
+        }
+
+        private async void GetCalendarsAndEvents()
+        {
+            await Task.Run(() => GoogleAPIAdapter.GetCalendars());
+            await Task.Run(() => GoogleAPIAdapter.GetAllEvents(this));
+        }
 
 
 		public void Update(object sender, object args)

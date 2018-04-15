@@ -106,6 +106,7 @@
     <Compile Include="Calendar.xaml.cs">
       <DependentUpon>Calendar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GoogleAPIAdapter.cs" />
     <Compile Include="GPIOButtonListener.cs" />
     <Compile Include="CalendarPage.xaml.cs">
       <DependentUpon>CalendarPage.xaml</DependentUpon>
