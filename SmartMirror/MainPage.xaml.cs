@@ -176,31 +176,31 @@ namespace SmartMirror
 
 		private void Update12HrForecast()
 		{
-			string errorMsg = Weather.GetErrorMsg();
+			string errorMsg = WeatherController.GetErrorMsg();
 			if (errorMsg != "")
 			{
 				// Add error dialog
 				return;
 			}
-			Set12HrForecast(currDateTime, Weather.GetHourlyForecast(), Weather.GetHourlyPrecipitation());
+			Set12HrForecast(currDateTime, WeatherController.GetHourlyForecast(), WeatherController.GetHourlyPrecipitation());
 		}
 
 		private void UpdateCurrentConditions()
 		{
-			string errorMsg = Weather.GetErrorMsg();
+			string errorMsg = WeatherController.GetErrorMsg();
 			if (errorMsg != "")
 			{
 				// Add error dialog popup
 				return;
 			}
-			SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetConditionsMsg());
-			errorMsg = Weather.GetErrorMsg();
+			SetCurrentConditions(WeatherController.GetCurrTemp(), WeatherController.GetConditionsMsg());
+			errorMsg = WeatherController.GetErrorMsg();
 			if (errorMsg != "")
 			{
 				// Add error dialog popup
 				return;
 			}
-			SetTodaysForecast(Weather.GetHighTemp(), Weather.GetLowTemp());
+			SetTodaysForecast(WeatherController.GetHighTemp(), WeatherController.GetLowTemp());
 		}
 
 

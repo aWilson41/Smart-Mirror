@@ -71,10 +71,10 @@ namespace SmartMirror
 				if (frame.Content == null)
 				{
 					// On app start we should update the weather
-					Weather.UpdateCurrentConditions(null, null);
-					Weather.UpdateTodaysForecast(null, null);
-					Weather.UpdateHourlyForecast(null, null);
-					Weather.Update10DayForecast(null, null);
+					WeatherController.UpdateCurrentConditions(null, null);
+					WeatherController.UpdateTodaysForecast(null, null);
+					WeatherController.UpdateHourlyForecast(null, null);
+					WeatherController.Update10DayForecast(null, null);
 
 					// Navigate to a new main page and save that main page
 					frame.Navigate(typeof(MainPage), e.Arguments);
