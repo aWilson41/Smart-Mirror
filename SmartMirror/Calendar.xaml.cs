@@ -85,19 +85,19 @@ namespace SmartMirror
 
 		public void SetCurrentDay(int day)
 		{
-			//DayOfWeek startDayOfWeek = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).DayOfWeek;
-			//int i = day - (int)startDayOfWeek - 1;
-			//int row = i / 7 + 1;
-			//int col = i % 7;
+			DayOfWeek startDayOfWeek = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).DayOfWeek;
+			int i = day - (int)startDayOfWeek - 1;
+			int row = i / 7;
+			int col = i % 7;
 
-			//Rectangle rect = new Rectangle();
-			//rect.Width = 157;
-			//rect.Height = 256;
-			//rect.Stroke = new SolidColorBrush(Color.FromArgb(255, 180, 120, 70));
-			//rect.StrokeThickness = 5;
-			//Canvas.SetLeft(rect, col * 154);
-			//Canvas.SetTop(rect, 143 + row * 254);
-			//CurrDayCanvas.Children.Add(rect);
+			Rectangle rect = new Rectangle();
+			rect.Width = 157;
+			rect.Height = 256;
+			rect.Stroke = new SolidColorBrush(Color.FromArgb(255, 180, 120, 70));
+			rect.StrokeThickness = 5;
+			Canvas.SetLeft(rect, col * 154);
+			Canvas.SetTop(rect, 143 + row * 253);
+			CurrDayCanvas.Children.Add(rect);
 		}
 
 		// Sets the textblock of the specified day

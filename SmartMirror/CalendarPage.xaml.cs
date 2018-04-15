@@ -2,7 +2,6 @@
 using Windows.UI.Xaml.Controls;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
 
 namespace SmartMirror
 {
@@ -21,12 +20,5 @@ namespace SmartMirror
 			Frame frame = Window.Current.Content as Frame;
 			frame.Navigate(typeof(MainPage), null);
 		}
-
-		//protected override void OnNavigatedTo(NavigationEventArgs e)
-		//{
-		//	Calendar.SetCurrentDay(6);
-
-		//	base.OnNavigatedTo(e);
-		//}
 	}
 }
