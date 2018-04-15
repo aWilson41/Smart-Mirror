@@ -96,7 +96,7 @@ namespace SmartMirror
 			// How many dividers we should put
 			int numOfDiv = (maxCeil - minFloor) / 10 - 1;
 
-			WeatherGraph.SetBounds(0, minFloor, 12, maxCeil);
+			WeatherGraph.SetBounds(0, minFloor, 11, maxCeil);
 			WeatherGraph.SetLineColor(Color.FromArgb(255, 135, 206, 235));
 			WeatherGraph.SetLabelColor(Color.FromArgb(255, 255, 255, 255));
 			WeatherGraph.SetLineThickness(8.0);
@@ -228,7 +228,7 @@ namespace SmartMirror
 				// Add error dialog popup
 				return;
 			}
-			SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetForecastMsg());
+			SetCurrentConditions(Weather.GetCurrTemp(), Weather.GetConditionsMsg());
 			errorMsg = Weather.GetErrorMsg();
 			if (errorMsg != "")
 			{

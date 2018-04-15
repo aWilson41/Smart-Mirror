@@ -7,7 +7,7 @@ using Windows.Storage;
 
 namespace SmartMirror
 {
-    class UserAccount
+    public class UserAccount
     {
         public UserAccount() {}
 

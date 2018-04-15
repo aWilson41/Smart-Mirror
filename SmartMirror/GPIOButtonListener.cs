@@ -6,7 +6,7 @@ namespace SmartMirror
 {
 	// For rpi3 connect button to pin 12 (gpio 18) and 6 (ground)
 	// Emits ButtonPressed when button goes down
-	class GPIOButtonListener
+	public class GPIOButtonListener
 	{
 		const int BUTTON_PIN = 18;
 		GpioPin pin;
