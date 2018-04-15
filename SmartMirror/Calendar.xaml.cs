@@ -63,6 +63,7 @@ namespace SmartMirror
 			// Update the calendar every 12 hours
 			dayTimer.Interval = new TimeSpan(12, 0, 0);
 			dayTimer.Start();
+			Update(null, null);
 
             GetCalendarsAndEvents();
         }
