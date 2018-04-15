@@ -114,6 +114,7 @@
     <Compile Include="PolyLineGraph.xaml.cs">
       <DependentUpon>PolyLineGraph.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserAccount.cs" />
     <Compile Include="Weather.cs" />
     <Compile Include="WeatherPage.xaml.cs">
       <DependentUpon>WeatherPage.xaml</DependentUpon>

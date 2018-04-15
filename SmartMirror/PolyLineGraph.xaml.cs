@@ -85,6 +85,10 @@ namespace SmartMirror
 		// Updates the polyline representation to the specified points
 		public void Update()
 		{
+			// A line can't be formed with less than 1 point
+			if (points.Count <= 1)
+				return;
+
 			double width = end.X - start.X;
 			double height = end.Y - start.Y;
 

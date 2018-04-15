@@ -48,7 +48,7 @@
 				<TextBlock x:Name="TimeLabel12" HorizontalAlignment="Left" TextWrapping="Wrap" Text="12am" VerticalAlignment="Top" Foreground="White" FontSize="30" Width="70" FontWeight="Bold" Canvas.Left="701" Canvas.Top="1100" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="44"/>
 			</Canvas>
 
-			<Border x:Name="WeatherGraphBorder" BorderBrush="White" BorderThickness="0,2,0,2" Width="956" Height="340" Canvas.Left="-220" Canvas.Top="760">
+			<Border x:Name="WeatherGraphBorder" BorderBrush="White" BorderThickness="1,2,1,2" Width="956" Height="340" Canvas.Left="-220" Canvas.Top="760">
 				<local:PolyLineGraph x:Name="WeatherGraph" Width="956" Height="340"/>
 			</Border>
 			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White" Visibility="Collapsed"/>

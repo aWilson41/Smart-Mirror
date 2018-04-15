@@ -14,6 +14,8 @@ namespace SmartMirrorTests
         [TestMethod]
         public void TestHourlyForecast()
         {
+			UserAccount.saveSetting("zipcode", "75002");
+
 			List<int> hourlyForecast = new List<int>();
 			List<int> precipChance = new List<int>();
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -41,6 +43,8 @@ namespace SmartMirrorTests
 		[TestMethod]
 		public void TestCurrentConditions()
 		{
+			UserAccount.saveSetting("zipcode", "75002");
+
 			// Test the forecast message
 			string conditionMsg = "";
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -56,6 +60,8 @@ namespace SmartMirrorTests
 		[TestMethod]
 		public void Test10DayForecast()
 		{
+			UserAccount.saveSetting("zipcode", "75002");
+
 			List<int> dailyForecast = new List<int>();
 			List<int> precipChance = new List<int>();
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,

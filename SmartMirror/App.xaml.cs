@@ -24,15 +24,13 @@ namespace SmartMirror
 			// hook up button pressed to cyclepage
 			buttonListener.ButtonPressed += CyclePage;
 
-            // Initialize web server
-            server = new HttpServer(8090);
+			// Initialize web server
+			server = new HttpServer(8090);
 
-            // Set default settings
-            Object zipcode = UserAccount.getSetting("zipcode");
-            if (zipcode == null)
-            {
-                UserAccount.saveSetting("zipcode", "94105");
-            }
+			// Set default settings
+			Object zipcode = UserAccount.getSetting("zipcode");
+			if (zipcode == null)
+				UserAccount.saveSetting("zipcode", "75002");
 		}
 
 		// Cycles through navigation
