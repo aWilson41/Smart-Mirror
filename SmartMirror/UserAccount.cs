@@ -14,10 +14,14 @@ namespace SmartMirror
         public static Object getSetting(string setting)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            return localSettings.Values[setting];
+            if (localSettings.Values[setting] != null)
+            {
+                return localSettings.Values[setting];
+            }
+            return null;
         }
 
-        public static Object saveSetting(string setting, string value)
+        public static Object saveSetting(string setting, Object value)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             localSettings.Values[setting] = value;
