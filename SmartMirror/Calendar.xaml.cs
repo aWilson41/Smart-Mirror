@@ -64,14 +64,6 @@ namespace SmartMirror
 			dayTimer.Interval = new TimeSpan(12, 0, 0);
 			dayTimer.Start();
 			Update(null, null);
-
-            GetCalendarsAndEvents();
-        }
-
-        private async void GetCalendarsAndEvents()
-        {
-            await Task.Run(() => GoogleAPIAdapter.GetCalendars());
-            GetEvents();
         }
 
         private async void GetEvents()
