@@ -64,13 +64,22 @@ namespace SmartMirror
 			dayTimer.Interval = new TimeSpan(12, 0, 0);
 			dayTimer.Start();
 
-			GetCalendarsAndEvents();
+            GetCalendarsAndEvents();
         }
 
         private async void GetCalendarsAndEvents()
         {
             await Task.Run(() => GoogleAPIAdapter.GetCalendars());
-            await Task.Run(() => GoogleAPIAdapter.GetAllEvents(this));
+            GetEvents();
+        }
+
+        private async void GetEvents()
+        {
+            List<Tuple<int, string>> events = await GoogleAPIAdapter.GetAllEvents();
+            foreach (Tuple<int, string> evt in events)
+            {
+                AddEvent(evt.Item1, evt.Item2);
+            }
         }
 
 
@@ -80,6 +89,8 @@ namespace SmartMirror
 			string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(now.Month);
 			MonthYearLabel.Text = monthName + ' ' + now.Year.ToString();
 			SetCurrentDay(now.Day);
+            ClearEvents();
+            GetEvents();
 		}
 
 
@@ -148,5 +159,13 @@ namespace SmartMirror
 				dayDesc[day].Text += splitStr[i] + '\n';
 			}
 		}
+
+        public void ClearEvents()
+        {
+            foreach (KeyValuePair<int, TextBlock> day in dayDesc)
+            {
+                day.Value.Text = "";
+            }
+        }
 	}
 }

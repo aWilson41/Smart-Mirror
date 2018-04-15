@@ -104,7 +104,8 @@ namespace SmartMirror
         {
             DateTime freshness = new DateTime(Convert.ToInt64(UserAccount.getSetting("googleFreshness")));
             int expiresIn = Convert.ToInt32(UserAccount.getSetting("googleExpires"));
-            if (expiresIn > 0 && DateTime.Now.Subtract(freshness).Seconds > expiresIn)
+            int elapsedTime = (int)DateTime.Now.Subtract(freshness).TotalSeconds;
+            if (expiresIn > 0 && elapsedTime > expiresIn)
             {
                 await Task.Run(() => Refresh());
             }
@@ -122,6 +123,7 @@ namespace SmartMirror
                 response = await httpClient.GetAsync(requestUri);
                 body = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine(body);
+                Debug.WriteLine(response.RequestMessage.Headers.Authorization);
                 JsonObject obj = JsonValue.Parse(body).GetObject();
                 JsonArray calendars = obj.GetNamedArray("items");
                 foreach (JsonValue element in calendars)
@@ -148,11 +150,12 @@ namespace SmartMirror
             }
         }
 
-        public static async void GetEvents(String calendarId, Calendar calendarInstance)
+        public static async Task<List<Tuple<int, string>>> GetEvents(String calendarId)
         {
             DateTime freshness = new DateTime(Convert.ToInt64(UserAccount.getSetting("googleFreshness")));
             int expiresIn = Convert.ToInt32(UserAccount.getSetting("googleExpires"));
-            if (expiresIn > 0 && DateTime.Now.Subtract(freshness).Seconds > expiresIn)
+            int elapsedTime = (int)DateTime.Now.Subtract(freshness).TotalSeconds;
+            if (expiresIn > 0 && elapsedTime > expiresIn)
             {
                 await Task.Run(() => Refresh());
             }
@@ -162,6 +165,7 @@ namespace SmartMirror
             DateTime timeMax = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
             String min = timeMin.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz", DateTimeFormatInfo.InvariantInfo);
             String max = timeMax.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz", DateTimeFormatInfo.InvariantInfo);
+            List<Tuple<int, string>> calEvents = new List<Tuple<int, string>>();
 
             HttpClient httpClient = new HttpClient();
             var headers = httpClient.DefaultRequestHeaders;
@@ -172,8 +176,6 @@ namespace SmartMirror
 
             response = await httpClient.GetAsync(requestUri);
             body = await response.Content.ReadAsStringAsync();
-
-            //Debug.WriteLine(calendarId + ": " + body);
 
             JsonObject obj = JsonValue.Parse(body).GetObject();
             IJsonValue test;
@@ -191,16 +193,14 @@ namespace SmartMirror
                         if (start.TryGetValue("dateTime", out test))
                         {
                             String time = start.GetNamedString("dateTime");
-                            DateTimeOffset dateTime;
-                            DateTimeOffset.TryParseExact(time, formats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out dateTime);
+                            DateTime dateTime;
+                            DateTime.TryParseExact(time, formats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out dateTime);
 
                             if (dateTime.Month == now.Month)
                             {
                                 String title = dateTime.ToString("HH:mm") + " " + evt.GetNamedString("summary");
                                 Debug.WriteLine(dateTime.Day + title);
-                                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                                    () => { calendarInstance.AddEvent(dateTime.Day, title); });
-
+                                calEvents.Add(new Tuple<int, string>(dateTime.Day, title));
                             }
                         }
                         else
@@ -212,17 +212,19 @@ namespace SmartMirror
                             {
                                 String title = evt.GetNamedString("summary");
                                 Debug.WriteLine(date.Day + title);
-                                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                                    () => { calendarInstance.AddEvent(date.Day, title); });
+                                calEvents.Add(new Tuple<int, string>(date.Day, title));
                             }
                         }
                     }
                 }
             }
+
+            return calEvents;
         }
 
-        public static async void GetAllEvents(Calendar calendarInstance)
+        public static async Task<List<Tuple<int, string>>> GetAllEvents()
         {
+            List<Tuple<int, string>> events = new List<Tuple<int, string>>();
             Debug.WriteLine(UserAccount.getSetting("calendars"));
             ApplicationDataCompositeValue cals = (ApplicationDataCompositeValue)UserAccount.getSetting("calendars");
             if (cals == null)
@@ -233,9 +235,10 @@ namespace SmartMirror
             {
                 if ((bool)cal.Value && cal.Key != "#contacts@group.v.calendar.google.com" && cal.Key != "family03301070956538335300@group.calendar.google.com" && cal.Key != "en.usa#holiday@group.v.calendar.google.com")
                 {
-                    await Task.Run(() => GetEvents(cal.Key, calendarInstance));
+                    events.AddRange(await GetEvents(cal.Key));
                 }
             }
+            return events;
         }
 
         public static async Task<String> zipcode(String zipcode)
