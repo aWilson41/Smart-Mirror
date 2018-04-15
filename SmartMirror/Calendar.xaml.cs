@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace SmartMirror
 {
 	public sealed partial class Calendar : UserControl
 	{
 		// Box to go around current day (app freezes when setting canvas positions?)
-		//Rectangle daySelection = new Rectangle();
 		Dictionary<int, TextBlock> dayDesc = new Dictionary<int, TextBlock>();
 
 		public Calendar()
@@ -20,19 +22,6 @@ namespace SmartMirror
 			DateTime now = DateTime.Now;
 			string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(now.Month);
 			MonthYearLabel.Text = monthName + ' ' + now.Year.ToString();
-
-			//for some reason the app freezes when trying to SetTop and SetLeft of the rect ?
-			//double size = Width / 7.0;
-			//for (int i = 0; i < 7; i++)
-			//{
-			//	Rectangle vertRect = new Rectangle();
-			//	vertRect.Width = 2;
-			//	vertRect.Height = 1800;
-			//	vertRect.Fill = new SolidColorBrush(Windows.UI.Colors.White);
-			//	MainCanvas.Children.Add(vertRect);
-			//	Canvas.SetTop(vertRect, 60);
-			//	Canvas.SetLeft(vertRect, size * i);
-			//}
 
 			DateTime startDate = new DateTime(now.Year, now.Month, 1);
 			DayOfWeek startDayOfWeek = startDate.DayOfWeek;
@@ -69,13 +58,13 @@ namespace SmartMirror
 				dayDesc.Add(dayNum, dayDescLabel);
 			}
 
-			DispatcherTimer daysForecastTimer = new DispatcherTimer();
-			daysForecastTimer.Tick += Update;
-            // Update the calendar every 12 hours
-            daysForecastTimer.Interval = new TimeSpan(12, 0, 0);
-            daysForecastTimer.Start();
+			DispatcherTimer dayTimer = new DispatcherTimer();
+			dayTimer.Tick += Update;
+			// Update the calendar every 12 hours
+			dayTimer.Interval = new TimeSpan(12, 0, 0);
+			dayTimer.Start();
 
-            GetCalendarsAndEvents();
+			GetCalendarsAndEvents();
         }
 
         private async void GetCalendarsAndEvents()
@@ -90,8 +79,26 @@ namespace SmartMirror
 			DateTime now = DateTime.Now;
 			string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(now.Month);
 			MonthYearLabel.Text = monthName + ' ' + now.Year.ToString();
+			SetCurrentDay(now.Day);
 		}
 
+
+		public void SetCurrentDay(int day)
+		{
+			//DayOfWeek startDayOfWeek = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).DayOfWeek;
+			//int i = day - (int)startDayOfWeek - 1;
+			//int row = i / 7 + 1;
+			//int col = i % 7;
+
+			//Rectangle rect = new Rectangle();
+			//rect.Width = 157;
+			//rect.Height = 256;
+			//rect.Stroke = new SolidColorBrush(Color.FromArgb(255, 180, 120, 70));
+			//rect.StrokeThickness = 5;
+			//Canvas.SetLeft(rect, col * 154);
+			//Canvas.SetTop(rect, 143 + row * 254);
+			//CurrDayCanvas.Children.Add(rect);
+		}
 
 		// Sets the textblock of the specified day
 		public void SetText(int day, string str)

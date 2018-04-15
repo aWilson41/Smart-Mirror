@@ -41,7 +41,7 @@
 		</StackPanel>
 		<Rectangle Fill="#FFF4F4F5" Height="2" Width="1080" Canvas.Top="66" Canvas.Left="0" Stroke="White" />
 		<Rectangle Fill="#FFF4F4F5" Height="2" Width="1080" Canvas.Top="143" Canvas.Left="0" Stroke="White"/>
-		
+
 		<Rectangle Fill="#FFF4F4F5" Height="2" Width="1080" Canvas.Top="397" Canvas.Left="0" Stroke="White"/>
 		<Rectangle Fill="#FFF4F4F5" Height="2" Width="1080" Canvas.Top="650" Canvas.Left="0" Stroke="White"/>
 		<Rectangle Fill="#FFF4F4F5" Height="2" Width="1080" Canvas.Top="905" Canvas.Left="0" Stroke="White"/>
@@ -54,5 +54,6 @@
 		<Rectangle Fill="#FFF4F4F5" Height="1555" Width="2" Canvas.Top="70" Canvas.Left="615" Stroke="White"/>
 		<Rectangle Fill="#FFF4F4F5" Height="1555" Width="2" Canvas.Top="70" Canvas.Left="770" Stroke="White"/>
 		<Rectangle Fill="#FFF4F4F5" Height="1555" Width="2" Canvas.Top="70" Canvas.Left="925" Stroke="White"/>
+		<Canvas x:Name="CurrDayCanvas" Width="1080" Height="1600"/>
 	</Canvas>
 </UserControl>

@@ -61,9 +61,11 @@ namespace SmartMirror
 				WeatherGraph12Hr.AddPoint(new Point(i, tempForecast[i]));
 				WeatherGraph12Hr.AddLabel(precipForecast[i].ToString());
 			}
+			DateTime iDateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 			for (int i = dateTime.Hour; i < dateTime.Hour + 12; i++)
 			{
-				WeatherGraph12Hr.AddHorzLabel(new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, i, 0, 0).ToString("h tt"));
+				WeatherGraph12Hr.AddHorzLabel(iDateTime.ToString("h tt"));
+				iDateTime = iDateTime.AddHours(1);
 			}
 			WeatherGraph12Hr.Update();
 		}
@@ -106,7 +108,27 @@ namespace SmartMirror
 				WeatherGraph10Day.AddPoint(new Point(i, tempForecast[i]));
 				WeatherGraph10Day.AddLabel(precipForecast[i].ToString());
 			}
+			DateTime iDateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
+			for (int i = 0; i < 10; i++)
+			{
+				WeatherGraph10Day.AddHorzLabel(iDateTime.ToString("%d") + GetNumberSuffix(iDateTime.Day));
+				iDateTime = iDateTime.AddDays(1);
+			}
 			WeatherGraph10Day.Update();
+		}
+
+		private string GetNumberSuffix(int i)
+		{
+			int j = i % 10;
+			int k = i % 100;
+			if (j == 1 && k != 11)
+				return "st";
+			if (j == 2 && k != 12)
+				return "nd";
+			if (j == 3 && k != 13)
+				return "rd";
+			else
+				return "th";
 		}
 
 

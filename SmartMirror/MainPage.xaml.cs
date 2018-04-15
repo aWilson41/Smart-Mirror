@@ -111,9 +111,11 @@ namespace SmartMirror
 				WeatherGraph.AddPoint(new Point(i, tempForecast[i]));
 				WeatherGraph.AddLabel(precipForecast[i].ToString());
 			}
+			DateTime iDateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
 			for (int i = dateTime.Hour; i < dateTime.Hour + 12; i++)
 			{
-				WeatherGraph.AddHorzLabel(new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, i, 0, 0).ToString("h tt"));
+				WeatherGraph.AddHorzLabel(iDateTime.ToString("h tt"));
+				iDateTime = iDateTime.AddHours(1);
 			}
 			WeatherGraph.Update();
 		}
