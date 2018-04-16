@@ -21,10 +21,9 @@ namespace SmartMirrorTests
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 			() =>
 			{
-				Weather.UpdateHourlyForecast(null, null);
-				hourlyForecast = Weather.GetHourlyForecast();
-				precipChance = Weather.GetHourlyPrecipitation();
-				errorMessage = Weather.GetErrorMsg();
+				WeatherController.UpdateHourlyForecast(null, null);
+				hourlyForecast = WeatherController.GetHourlyForecast();
+				precipChance = WeatherController.GetHourlyPrecipitation();
 			}).AsTask().Wait();
 
 			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
@@ -62,9 +61,8 @@ namespace SmartMirrorTests
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 			() =>
 			{
-				Weather.UpdateCurrentConditions(null, null);
-				conditionMsg = Weather.GetConditionsMsg();
-				errorMessage = Weather.GetErrorMsg();
+				WeatherController.UpdateCurrentConditions(null, null);
+				conditionMsg = WeatherController.GetConditionsMsg();
 			}).AsTask().Wait();
 
 			Assert.IsTrue(conditionMsg != "");
@@ -84,10 +82,9 @@ namespace SmartMirrorTests
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 			() =>
 			{
-				Weather.Update10DayForecast(null, null);
-				dailyForecast = Weather.GetDayForecast();
-				precipChance = Weather.GetDayPrecipitation();
-				errorMessage = Weather.GetErrorMsg();
+				WeatherController.Update10DayForecast(null, null);
+				dailyForecast = WeatherController.GetDayForecast();
+				precipChance = WeatherController.GetDayPrecipitation();
 			}).AsTask().Wait();
 
 			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12

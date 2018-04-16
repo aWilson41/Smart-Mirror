@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 
 namespace SmartMirror
 {
-	public static class Weather
+	public static class WeatherController
 	{
         private static string zipcode = UserAccount.getSetting("zipcode").ToString();
 
@@ -39,7 +39,7 @@ namespace SmartMirror
 		public static List<int> GetDayForecast() { return dayTempList; }
 		public static List<int> GetDayPrecipitation() { return dayPrecipChance; }
 
-		static Weather()
+		static WeatherController()
 		{
             DispatcherTimer hourlyForecastTimer = new DispatcherTimer();
 			hourlyForecastTimer.Tick += UpdateHourlyForecast;
