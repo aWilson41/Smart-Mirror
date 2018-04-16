@@ -103,8 +103,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Calendar.xaml.cs">
-      <DependentUpon>Calendar.xaml</DependentUpon>
+    <Compile Include="CalendarController.xaml.cs">
+      <DependentUpon>CalendarController.xaml</DependentUpon>
     </Compile>
     <Compile Include="GoogleAPIAdapter.cs" />
     <Compile Include="CalendarPage.xaml.cs">
@@ -116,7 +116,7 @@
       <DependentUpon>PolyLineGraph.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserAccount.cs" />
-    <Compile Include="Weather.cs" />
+    <Compile Include="WeatherController.cs" />
     <Compile Include="WeatherPage.xaml.cs">
       <DependentUpon>WeatherPage.xaml</DependentUpon>
     </Compile>
@@ -146,9 +146,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Calendar.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="CalendarController.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CalendarPage.xaml">
       <SubType>Designer</SubType>

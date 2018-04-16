@@ -12,7 +12,7 @@ namespace SmartMirror
 		Frame frame;
 		GPIOButtonListener buttonListener = new GPIOButtonListener();
 		int currPage = 0;
-        HttpServer server;
+		HttpServer server;
 
 		public App()
 		{

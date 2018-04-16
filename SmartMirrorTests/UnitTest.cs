@@ -7,12 +7,12 @@ using SmartMirror;
 
 namespace SmartMirrorTests
 {
-    [TestClass]
-    public class UnitTest1
-    {
-        [TestMethod]
-        public void TestHourlyForecast()
-        {
+	[TestClass]
+	public class UnitTest1
+	{
+		[TestMethod]
+		public void TestHourlyForecast()
+		{
 			UserAccount.saveSetting("zipcode", "75002");
 
 			List<int> hourlyForecast = new List<int>();
@@ -24,6 +24,7 @@ namespace SmartMirrorTests
 				WeatherController.UpdateHourlyForecast(null, null);
 				hourlyForecast = WeatherController.GetHourlyForecast();
 				precipChance = WeatherController.GetHourlyPrecipitation();
+				errorMessage = WeatherController.GetErrorMsg();
 			}).AsTask().Wait();
 
 			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
@@ -63,6 +64,7 @@ namespace SmartMirrorTests
 			{
 				WeatherController.UpdateCurrentConditions(null, null);
 				conditionMsg = WeatherController.GetConditionsMsg();
+				errorMessage = WeatherController.GetErrorMsg();
 			}).AsTask().Wait();
 
 			Assert.IsTrue(conditionMsg != "");
@@ -85,6 +87,7 @@ namespace SmartMirrorTests
 				WeatherController.Update10DayForecast(null, null);
 				dailyForecast = WeatherController.GetDayForecast();
 				precipChance = WeatherController.GetDayPrecipitation();
+				errorMessage = WeatherController.GetErrorMsg();
 			}).AsTask().Wait();
 
 			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
@@ -110,5 +113,5 @@ namespace SmartMirrorTests
 			// There is an error message if we failed to make the webrequest
 			Assert.IsTrue(errorMessage == "");
 		}
-    }
+	}
 }

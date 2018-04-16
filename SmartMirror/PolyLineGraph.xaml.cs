@@ -153,7 +153,7 @@ namespace SmartMirror
 					GraphCanvas.Children.Add(rect);
 				}
 			}
-			
+
 			// Add text labels on divider positions
 			double rangeY = (end.Y - start.Y) / (numDividersY + 1);
 			for (int i = 0; i < numDividersY + 2; i++)

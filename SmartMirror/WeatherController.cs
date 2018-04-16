@@ -8,7 +8,7 @@ namespace SmartMirror
 {
 	public static class WeatherController
 	{
-        private static string zipcode = UserAccount.getSetting("zipcode").ToString();
+		private static string zipcode = UserAccount.getSetting("zipcode").ToString();
 
 		// 12 hour forecast
 		private static List<int> hourlyTempList = new List<int>();
@@ -41,7 +41,7 @@ namespace SmartMirror
 
 		static WeatherController()
 		{
-            DispatcherTimer hourlyForecastTimer = new DispatcherTimer();
+			DispatcherTimer hourlyForecastTimer = new DispatcherTimer();
 			hourlyForecastTimer.Tick += UpdateHourlyForecast;
 			// Update the 12hr forecast every 30 minutes
 			hourlyForecastTimer.Interval = new TimeSpan(0, 30, 0);
