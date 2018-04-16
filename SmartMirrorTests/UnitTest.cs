@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Windows.UI.Core;
@@ -18,12 +17,14 @@ namespace SmartMirrorTests
 
 			List<int> hourlyForecast = new List<int>();
 			List<int> precipChance = new List<int>();
+			string errorMessage = "";
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 			() =>
 			{
 				Weather.UpdateHourlyForecast(null, null);
 				hourlyForecast = Weather.GetHourlyForecast();
 				precipChance = Weather.GetHourlyPrecipitation();
+				errorMessage = Weather.GetErrorMsg();
 			}).AsTask().Wait();
 
 			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
@@ -45,6 +46,9 @@ namespace SmartMirrorTests
 				Assert.IsFalse(precipChance[i] > 100);
 				Assert.IsFalse(precipChance[i] < 0);
 			}
+
+			// There is an error message if we failed to make the webrequest
+			Assert.IsTrue(errorMessage == "");
 		}
 
 		[TestMethod]
@@ -54,14 +58,19 @@ namespace SmartMirrorTests
 
 			// Test the forecast message
 			string conditionMsg = "";
+			string errorMessage = "";
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 			() =>
 			{
 				Weather.UpdateCurrentConditions(null, null);
 				conditionMsg = Weather.GetConditionsMsg();
+				errorMessage = Weather.GetErrorMsg();
 			}).AsTask().Wait();
 
 			Assert.IsTrue(conditionMsg != "");
+
+			// There is an error message if we failed to make the webrequest
+			Assert.IsTrue(errorMessage == "");
 		}
 
 		[TestMethod]
@@ -71,12 +80,14 @@ namespace SmartMirrorTests
 
 			List<int> dailyForecast = new List<int>();
 			List<int> precipChance = new List<int>();
+			string errorMessage = "";
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
 			() =>
 			{
 				Weather.Update10DayForecast(null, null);
 				dailyForecast = Weather.GetDayForecast();
 				precipChance = Weather.GetDayPrecipitation();
+				errorMessage = Weather.GetErrorMsg();
 			}).AsTask().Wait();
 
 			// There should be exactly 12 entires in the hourly forecast so we test value less than 12, 12, and greater than 12
@@ -98,6 +109,9 @@ namespace SmartMirrorTests
 				Assert.IsFalse(precipChance[i] > 100);
 				Assert.IsFalse(precipChance[i] < 0);
 			}
+
+			// There is an error message if we failed to make the webrequest
+			Assert.IsTrue(errorMessage == "");
 		}
     }
 }
