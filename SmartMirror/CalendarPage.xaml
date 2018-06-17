@@ -10,7 +10,7 @@
 		<StackPanel.RenderTransform>
 			<CompositeTransform Rotation="-90" TranslateY="1080"/>
 		</StackPanel.RenderTransform>
-		<Button x:Name="Button" Content="Too Main Page" Background="#33000000" Foreground="White" Height="77" Width="289" FontSize="36" Click="Button_Click" BorderBrush="White" HorizontalAlignment="Center"/>
+		<Button x:Name="Button" Content="Too Main Page" Background="#33000000" Foreground="White" Height="77" Width="289" FontSize="36" Click="Button_Click" BorderBrush="White" HorizontalAlignment="Center" Visibility="Collapsed"/>
 		<local:Calendar x:Name="Calendar" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 	</StackPanel>
 </Page>

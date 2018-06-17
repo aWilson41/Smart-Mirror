@@ -8,8 +8,6 @@ namespace SmartMirror
 {
 	public static class WeatherController
 	{
-		private static string zipcode = UserAccount.getSetting("zipcode").ToString();
-
 		// 12 hour forecast
 		private static List<int> hourlyTempList = new List<int>();
 		private static List<int> hourlyPrecipChance = new List<int>();
@@ -64,7 +62,7 @@ namespace SmartMirror
 		static public void UpdateHourlyForecast(object sender, object args)
 		{
 			errorMessage = "";
-			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/" + zipcode + ".json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/hourly/lang:EN/q/75002.json");
 
 			// Try to get the forecast from wunderground
 			try
@@ -81,7 +79,7 @@ namespace SmartMirror
 				for (int hr = 0; hr < 11; hr++)
 				{
 					responseStr = responseStr.Substring(responseStr.IndexOf("temp") + 20);
-					int temp = int.Parse(responseStr.Substring(0, responseStr.IndexOf('"')));
+					int temp = (int)Math.Round(Double.Parse(responseStr.Substring(0, responseStr.IndexOf('"'))));
 					hourlyTempList.Add(temp);
 
 					responseStr = responseStr.Substring(responseStr.IndexOf("pop") + 7);
@@ -100,7 +98,7 @@ namespace SmartMirror
 		public static void UpdateCurrentConditions(object sender, object args)
 		{
 			errorMessage = "";
-			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/" + zipcode + ".json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/conditions/lang:EN/q/75002.json");
 
 			// Try to get the weather from the wundergrund
 			try
@@ -133,7 +131,7 @@ namespace SmartMirror
 		public static void UpdateTodaysForecast(object sender, object args)
 		{
 			errorMessage = "";
-			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/" + zipcode + ".json");
+			WebRequest request = WebRequest.Create("http://api.wunderground.com/api/c1ae05b22ded2847/forecast/lang:EN/q/75002.json");
 
 			// Try to get the forecast from the wunderground
 			try
@@ -160,11 +158,6 @@ namespace SmartMirror
 				errorMessage = "Can't get day forecast";
 			}
 		}
-
-		//public static void UpdateWeatherGIF()
-		//{
-
-		//}
 
 		public static void Update10DayForecast(object sender, object args)
 		{

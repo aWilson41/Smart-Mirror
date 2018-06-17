@@ -29,7 +29,8 @@ namespace SmartMirror
 
 		public void SetDate(DateTime currDateTime)
 		{
-			month.Text = currDateTime.ToString("MMM", CultureInfo.InvariantCulture);
+			month.Text = currDateTime.ToString("ddd", CultureInfo.InvariantCulture);
+			string monthStr = currDateTime.ToString("MMM", CultureInfo.InvariantCulture);
 			// Suffix is th unless it has a 1, 2, or 3 on the end. Only works 10s digits. (But days only go up to 31)
 			string suffix = "th";
 			int value = currDateTime.Day % 10;
@@ -42,7 +43,7 @@ namespace SmartMirror
 				else if (value == 3)
 					suffix = "rd";
 			}
-			day.Text = currDateTime.Day.ToString() + suffix;
+			day.Text = monthStr + " " + currDateTime.Day.ToString() + suffix;
 		}
 
 		public void SetTime(DateTime currDateTime)

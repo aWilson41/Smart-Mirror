@@ -12,7 +12,6 @@ namespace SmartMirror
 		Frame frame;
 		GPIOButtonListener buttonListener = new GPIOButtonListener();
 		int currPage = 0;
-		HttpServer server;
 
 		public App()
 		{
@@ -23,14 +22,6 @@ namespace SmartMirror
 			buttonListener.StartListener();
 			// hook up button pressed to cyclepage
 			buttonListener.ButtonPressed += CyclePage;
-
-			// Initialize web server
-			server = new HttpServer(8090);
-
-			// Set default settings
-			Object zipcode = UserAccount.getSetting("zipcode");
-			if (zipcode == null)
-				UserAccount.saveSetting("zipcode", "75002");
 		}
 
 		// Cycles through navigation
@@ -77,7 +68,7 @@ namespace SmartMirror
 					WeatherController.Update10DayForecast(null, null);
 
 					// Navigate to a new main page and save that main page
-					frame.Navigate(typeof(MainPage), e.Arguments);
+					frame.Navigate(typeof(CalendarPage), e.Arguments);
 				}
 				// Ensure the current window is active
 				Window.Current.Activate();

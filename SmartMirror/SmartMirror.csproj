@@ -106,16 +106,13 @@
     <Compile Include="CalendarController.xaml.cs">
       <DependentUpon>CalendarController.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GoogleAPIAdapter.cs" />
     <Compile Include="CalendarPage.xaml.cs">
       <DependentUpon>CalendarPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GPIOButtonListener.cs" />
-    <Compile Include="HttpServer.cs" />
     <Compile Include="PolyLineGraph.xaml.cs">
       <DependentUpon>PolyLineGraph.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserAccount.cs" />
     <Compile Include="WeatherController.cs" />
     <Compile Include="WeatherPage.xaml.cs">
       <DependentUpon>WeatherPage.xaml</DependentUpon>

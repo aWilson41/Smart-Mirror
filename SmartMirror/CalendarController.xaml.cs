@@ -66,15 +66,6 @@ namespace SmartMirror
 			Update(null, null);
 		}
 
-		private async void GetEvents()
-		{
-			List<Tuple<int, string>> events = await GoogleAPIAdapter.GetAllEvents();
-			foreach (Tuple<int, string> evt in events)
-			{
-				AddEvent(evt.Item1, evt.Item2);
-			}
-		}
-
 
 		public void Update(object sender, object args)
 		{
@@ -83,7 +74,6 @@ namespace SmartMirror
 			MonthYearLabel.Text = monthName + ' ' + now.Year.ToString();
 			SetCurrentDay(now.Day);
 			ClearEvents();
-			GetEvents();
 		}
 
 

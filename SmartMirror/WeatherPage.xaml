@@ -16,7 +16,7 @@
 			<local:PolyLineGraph x:Name="WeatherGraph10Day" Width="1006" Height="390" Canvas.Left="-245" Canvas.Top="600"/>
 			<local:PolyLineGraph x:Name="WeatherGraph12Hr" Width="1006" Height="390" Canvas.Left="-245" Canvas.Top="-100"/>
 
-			<Button x:Name="Button" Content="Too Calendar" Canvas.Left="101" Canvas.Top="-484" Background="#33000000" Foreground="White" FontSize="40" Click="Button_Click" BorderBrush="White"/>
+			<Button x:Name="Button" Content="Too Calendar" Canvas.Left="101" Canvas.Top="-484" Background="#33000000" Foreground="White" FontSize="40" Click="Button_Click" BorderBrush="White" Visibility="Collapsed"/>
 		</Canvas>
 	</Canvas>
 </Page>

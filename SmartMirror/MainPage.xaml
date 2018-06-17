@@ -17,7 +17,7 @@
 			<TextBlock x:Name="weatherLow" HorizontalAlignment="Left" TextWrapping="Wrap" Text="L" VerticalAlignment="Top" Foreground="White" FontSize="60" Width="100" Height="60" Canvas.Left="328" Canvas.Top="690" FontFamily="Assets/AGENCYB.TTF#Agency FB"/>
 			<TextBlock x:Name="weatherHigh" HorizontalAlignment="Left" TextWrapping="Wrap" Text="H" VerticalAlignment="Top" Foreground="White" FontSize="60" Width="100" Height="60" Canvas.Left="328" Canvas.Top="640" FontFamily="Assets/AGENCYB.TTF#Agency FB"/>
 
-			<TextBlock x:Name="month" TextWrapping="Wrap" Text="Jan" VerticalAlignment="Top" FontSize="160" Foreground="White" HorizontalAlignment="Left" Width="281" Canvas.Left="-243" Canvas.Top="-508" FontFamily="Assets/AGENCYB.TTF#Agency FB"/>
+			<TextBlock x:Name="month" TextWrapping="Wrap" Text="Jan" VerticalAlignment="Center" FontSize="160" Foreground="White" HorizontalAlignment="Left" Width="1000" Canvas.Left="-243" Canvas.Top="-508" FontFamily="Assets/AGENCYB.TTF#Agency FB" Margin="0,0,0,0"/>
 			<TextBlock x:Name="day" HorizontalAlignment="Left" TextWrapping="Wrap" Text="1st" VerticalAlignment="Top" Foreground="#FFF9F9F9" FontSize="120" FontWeight="Bold" Canvas.Left="-209" Canvas.Top="-341" FontFamily="Assets/AGENCYB.TTF#Agency FB"/>
 			<TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="00:00" VerticalAlignment="Top" Foreground="White" FontSize="150" Width="577" FontWeight="Bold" Canvas.Left="332" Canvas.Top="-502" FontFamily="Assets/AGENCYB.TTF#Agency FB" Height="184"/>
 
@@ -30,7 +30,7 @@
 			<Rectangle x:Name="TickRight" Fill="White" HorizontalAlignment="Left" Height="10" Margin="650,190,0,0" Stroke="White" VerticalAlignment="Top" Width="20" RadiusX="5" RadiusY="5"/>
 
 			<local:PolyLineGraph x:Name="WeatherGraph" Width="1006" Height="390" Canvas.Left="-245" Canvas.Top="750"/>
-			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White" Visibility="Visible"/>
+			<Button x:Name="button" Content="Too Weather Page" Canvas.Left="24" Canvas.Top="-463" Foreground="White" FontSize="24" Click="button_Click" BorderBrush="White" Visibility="Collapsed"/>
 		</Canvas>
 	</Canvas>
 </Page>
